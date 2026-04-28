@@ -1,0 +1,360 @@
+/* estilos generales */
+
+body {
+    background-color: #f2f3f5;
+}
+
+.perfil-contenedor {
+    margin-top: 25px;
+}
+
+/* navbar superior */
+
+.navbar-custom {
+    background-color: white;
+    border-bottom: 2px solid #d9d9d9;
+    padding: 12px 25px;
+}
+
+.logo-whirlpool {
+    height: 45px;
+}
+
+.menu-link {
+    color: #1c3d7c !important;
+    font-size: 20px;
+    font-weight: 600;
+    margin-right: 35px;
+}
+
+.usuario-box {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.user-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.usuario-nombre {
+    font-size: 20px;
+    color: #1c3d7c;
+    font-weight: 600;
+}
+
+/* tarjeta principal */
+
+.perfil-card {
+    background-color: white;
+    border-radius: 25px;
+    padding: 35px;
+    margin-top: 30px;
+}
+
+.perfil-left {
+    display: flex;
+    align-items: center;
+}
+
+.perfil-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 18px;
+}
+
+.perfil-nombre {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1c3d7c;
+}
+
+.acerca-link {
+    font-size: 22px;
+    margin-left: 15px;
+    color: #4d4d4d;
+    text-decoration: underline;
+}
+
+.perfil-puesto {
+    font-size: 20px;
+    color: #555;
+}
+
+.perfil-nivel {
+    background-color: #1c3d7c;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 22px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.puntos-box {
+    text-align: right;
+}
+
+.puntos-titulo {
+    font-size: 21px;
+    color: #4d4d4d;
+    font-weight: 600;
+}
+
+.puntos-numero {
+    font-size: 38px;
+    font-weight: bold;
+    color: #1c3d7c;
+}
+
+.coin-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.btn-canjear {
+    background-color: #1c3d7c;
+    color: white;
+    border-radius: 22px;
+    padding: 10px 35px;
+}
+
+/* secciones inferiores */
+
+.seccion-titulo {
+    color: #0d47a1;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.item-card {
+    background-color: white;
+    border-radius: 25px;
+    padding: 30px 20px;
+    text-align: center;
+    min-height: 210px;
+    margin-bottom: 20px;
+}
+
+.item-card h4 {
+    color: #0d2c5a;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.item-card p {
+    color: #555;
+    font-weight: 600;
+}
+
+.icono-logro,
+.icono-articulo {
+    width: 65px;
+    height: 65px;
+    border-radius: 15px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icono-logro {
+    background-color: #f4c400;
+}
+
+.icono-articulo {
+    background-color: #d9e8fb;
+}
+
+.icon-img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.rareza {
+    border-radius: 15px;
+    padding: 8px;
+    font-weight: bold;
+    font-size: 22px;
+    margin-top: 15px;
+}
+
+.ultra-raro {
+    background-color: #f4c400;
+    color: #0d2c5a;
+}
+
+.raro {
+    background-color: #0d47a1;
+    color: white;
+}
+
+/* hover underline menu */
+
+.menu-link {
+    position: relative;
+    text-decoration: none;
+}
+
+/* linea escondida */
+.menu-link::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 3px;
+    left: 0;
+    bottom: -6px;
+    background-color: #1c3d7c;
+    transition: width 0.3s ease;
+}
+
+/* aparece al pasar mouse */
+.menu-link:hover::after {
+    width: 100%;
+}
+
+/* contenedor foto */
+
+.foto-perfil-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* boton cambiar foto */
+
+.cambiar-foto-label {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #1c3d7c;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.cambiar-foto-label:hover {
+    color: #0d47a1;
+}
+
+/* modal acerca de mi */
+
+.modal-acerca {
+    border-radius: 25px;
+    padding: 30px;
+    background-color: white;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.perfil-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.perfil-img-modal {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.perfil-nombre-modal {
+    color: #1c3d7c;
+    font-weight: bold;
+}
+
+.perfil-puesto-modal {
+    color: #555;
+}
+
+.modal-titulo {
+    color: #1c3d7c;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.textarea-resumen {
+    resize: none;
+    border-radius: 15px;
+    padding: 12px;
+}
+
+.habilidades-box {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.habilidad-tag {
+    background-color: #1c3d7c;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 22px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* fondo gris del modal */
+
+.modal-content {
+    background-color: #f2f3f5;
+    border: none;
+}
+
+/* tarjeta blanca interna */
+
+.modal-body {
+    background-color: white;
+    border-radius: 25px;
+    padding: 30px;
+}
+
+/* boton cancelar modal */
+
+.btn-cancelar {
+    background-color: #d9d9d9;
+    color: #333;
+    border-radius: 22px;
+    padding: 10px 30px;
+    margin-right: 10px;
+}
+
+.btn-cancelar:hover {
+    background-color: #c7c7c7;
+    color: #333;
+}
+
+/* hover tarjetas */
+
+.item-card {
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0px 8px 18px rgba(0,0,0,0.1);
+}
