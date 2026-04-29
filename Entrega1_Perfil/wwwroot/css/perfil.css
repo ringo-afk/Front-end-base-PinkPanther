@@ -230,19 +230,6 @@ body {
     align-items: center;
 }
 
-/* boton cambiar foto */
-
-.cambiar-foto-label {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #1c3d7c;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.cambiar-foto-label:hover {
-    color: #0d47a1;
-}
 
 /* modal acerca de mi */
 

@@ -10,11 +10,6 @@
 
                 <div class="foto-perfil-box">
                     <img id="fotoPerfil" src="~/img/user-icon.png" class="perfil-img" />
-
-                    <label class="cambiar-foto-label">
-                        Cambiar foto
-                        <input type="file" id="inputFoto" accept="image/*" hidden />
-                    </label>
                 </div>
 
                 <div>
@@ -172,12 +167,8 @@
                         Resumen Profesional
                     </h3>
 
-                    <textarea asp-for="ResumenProfesional"
-                              class="form-control textarea-resumen"
-                              rows="4"></textarea>
-                    <small id="contadorResumen" class="text-muted">
-                        0 / 400 caracteres
-                    </small>
+                    <textarea asp-for="ResumenProfesional" class="form-control textarea-resumen" rows="4" maxlength="400"></textarea>
+                        <small class="text-muted"> Máximo 400 caracteres </small>
 
                     <span asp-validation-for="ResumenProfesional"
                           class="text-danger">
