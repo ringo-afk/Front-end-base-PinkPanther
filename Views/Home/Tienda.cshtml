@@ -1,0 +1,93 @@
+@model PinkPanther.Models.TiendaViewModel
+
+@{
+  ViewData["Title"] = "Tienda de personalizacion";
+}
+
+<section class="pagina-tienda">
+  <header class="encabezado-tienda text-center">
+    <h1>TIENDA DE PERSONALIZACIÓN</h1>
+    <p>Compra mejoras y estilos para tu personaje y vehículo dentro del juego</p>
+  </header>
+
+  @{ var compraExitosa = TempData["CompraExitosa"] as string; }
+  @if (!string.IsNullOrEmpty(compraExitosa))
+  {
+    <div class="alert alert-success mensaje-tienda" role="alert">@compraExitosa</div>
+  }
+
+  @{ var compraError = TempData["CompraError"] as string; }
+  @if (!string.IsNullOrEmpty(compraError))
+  {
+    <div class="alert alert-danger mensaje-tienda" role="alert">@compraError</div>
+  }
+
+  <div class="rejilla-tienda">
+    @foreach (var item in Model.Objetos)
+    {
+      <article class="tarjeta-tienda">
+        <div style="text-align: center; margin-bottom: 15px;">
+          @if (!string.IsNullOrEmpty(item.RutaImagen))
+          {
+            <img src="@Url.Content(item.RutaImagen)" alt="@item.Nombre" style="width: 220px; height: 220px; object-fit: contain; margin: 0 auto; display: block; mix-blend-mode: multiply;" />
+          }
+          else
+          {
+            <span>Imagen</span>
+          }
+        </div>
+        <h2>@item.Nombre (@item.Categoria)</h2>
+        <p class="puntos-articulo">@item.CostoPuntos.ToString("N0") PUNTOS</p>
+
+        @if (item.Estado == PinkPanther.Models.EstadoObjetoTienda.Disponible)
+        {
+          <a class="boton-tienda boton-comprar" href="#confirmacion-@item.Id">Comprar</a>
+        }
+        else if (item.Estado == PinkPanther.Models.EstadoObjetoTienda.Adquirido)
+        {
+          <button class="boton-tienda boton-adquirido" type="button" disabled>Adquirido</button>
+        }
+        else if (item.Estado == PinkPanther.Models.EstadoObjetoTienda.Equipado)
+        {
+          <button class="boton-tienda boton-equipado" type="button" disabled>Equipado</button>
+        }
+        else
+        {
+          <button class="boton-tienda boton-bloqueado" type="button" disabled>Puntos insuficientes</button>
+        }
+      </article>
+    }
+  </div>
+
+  @foreach (var item in Model.Objetos)
+  {
+    if (item.Estado == PinkPanther.Models.EstadoObjetoTienda.Disponible)
+    {
+      <div class="confirmacion-overlay" id="confirmacion-@item.Id">
+        <div class="ventana-confirmacion" role="dialog" aria-modal="true" aria-labelledby="titulo-@item.Id">
+          <h3 id="titulo-@item.Id">Confirmar compra</h3>
+          <p class="texto-confirmacion">¿Estás seguro de que deseas canjear @item.CostoPuntos.ToString("N0") puntos por @item.TextoConfirmacion?</p>
+          <div style="text-align: center; margin-bottom: 15px;">
+            @if (!string.IsNullOrEmpty(item.RutaImagen))
+            {
+              <img src="@Url.Content(item.RutaImagen)" alt="@item.Nombre" style="width: 220px; height: 220px; object-fit: contain; margin: 0 auto; display: block; mix-blend-mode: multiply;" />
+            }
+            else
+            {
+              <span>Imagen</span>
+            }
+          </div>
+          <div class="acciones-confirmacion">
+            <a class="boton-confirmacion boton-cancelar" href="#">Cancelar</a>
+            <form asp-controller="Home" asp-action="Comprar" method="post" class="form-compra">
+              <input type="hidden" name="objetoId" value="@item.Id" />
+              <button type="submit" class="boton-confirmacion boton-aceptar">Comprar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</section>
+
+
