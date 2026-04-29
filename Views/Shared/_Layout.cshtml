@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,23 +10,62 @@
     <link rel="stylesheet" href="~/PinkPanther.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @{ 
+        var currentAction = "";
+        var actionObj = ViewContext?.RouteData?.Values?[
+            "action"];
+        if (actionObj != null)
+        {
+            currentAction = actionObj.ToString();
+        }
+
+        // Variables para las clases de enlace
+        var clsIndex = "nav-link text-dark";
+        var clsTienda = "nav-link text-dark";
+        var clsPrivacy = "nav-link text-dark";
+
+        if (currentAction == "Index") { clsIndex = clsIndex + " nav-link-activo"; }
+        if (currentAction == "Tienda") { clsTienda = clsTienda + " nav-link-activo"; }
+        if (currentAction == "Privacy") { clsPrivacy = clsPrivacy + " nav-link-activo"; }
+
+        // Información de usuario 
+        var puntos = "5,000";
+        if (ViewData["PuntosUsuario"] != null) { puntos = ViewData["PuntosUsuario"].ToString() ?? puntos; }
+        var nombreUsuario = "Ana García";
+        if (ViewData["NombreUsuario"] != null) { nombreUsuario = ViewData["NombreUsuario"].ToString() ?? nombreUsuario; }
+        var rolUsuario = "Jugador";
+        if (ViewData["RolUsuario"] != null) { rolUsuario = ViewData["RolUsuario"].ToString() ?? rolUsuario; }
+    }
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow barra-principal">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PinkPanther</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Imagenes/Whirlpool-imagen.png" alt="Whirlpool" width="150">
+                </a>
+                <div class="menu-superior">
+                    <ul class="navbar-nav menu-centrado">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="@clsIndex" asp-area="" asp-controller="Home" asp-action="Index">Catálogo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="@clsTienda" asp-area="" asp-controller="Home" asp-action="Tienda">Tienda de personalización</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="@clsPrivacy" asp-area="" asp-controller="Home" asp-action="Privacy">Mi Perfil</a>
                         </li>
                     </ul>
+
+                    <div class="panel-perfil">
+                        <div class="pildora-puntos">
+                            <span class="punto-moneda"></span>
+                            @puntos
+                        </div>
+                        <div class="nombre-perfil">
+                            <strong>@nombreUsuario</strong>
+                            <span>@rolUsuario</span>
+                        </div>
+                        <div class="avatar-perfil"></div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -38,13 +77,10 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - PinkPanther - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-center">
+            &copy; 2026 - Proyecto de Gamificación Whirlpool - Pantalla desarrollada por Ringo García
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

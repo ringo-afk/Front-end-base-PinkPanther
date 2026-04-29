@@ -1,19 +1,3 @@
+
 # Front-end-base-PinkPanther
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Proyecto de Gamificación
+Proyecto de Gamificación
