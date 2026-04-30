@@ -1,0 +1,257 @@
+﻿@model Entrega1_Perfil.Models.PerfilViewModel
+
+<div class="container perfil-contenedor">
+
+    <!-- tarjeta principal del perfil -->
+    <div class="perfil-card">
+        <div class="row align-items-center">
+
+            <div class="col-md-6 perfil-left">
+
+                <div class="foto-perfil-box">
+                    <img id="fotoPerfil" src="~/img/user-icon.png" class="perfil-img" />
+                </div>
+
+                <div>
+                    <div class="perfil-nombre">
+                        @Model.Nombre
+
+                        <a href="#"
+                           class="acerca-link"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalAcerca">
+                            Acerca de mi
+                        </a>
+                    </div>
+
+                    <div class="perfil-puesto">
+                        @Model.Puesto
+                    </div>
+
+                    <div class="perfil-nivel">
+                        @Model.Nivel
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 puntos-box">
+                <div class="puntos-titulo">
+                    Balance de Puntos Digitales
+                </div>
+
+                <div class="puntos-numero">
+                    <img src="~/img/iconos/coin.png" class="coin-img" />
+                    @Model.PuntosDigitales
+                </div>
+
+                <button class="btn btn-canjear mt-2" data-bs-toggle="modal" data-bs-target="#modalConfirmarTienda">
+                    Canjear
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- secciones inferiores -->
+    <div class="row mt-5">
+
+        <div class="col-md-6">
+            <h2 class="seccion-titulo">Logros desbloqueados</h2>
+
+            <div class="row">
+                @foreach (var logro in Model.Logros)
+                {
+                    <div class="col-md-6">
+                        <div class="item-card">
+                            <div class="icono-logro">
+                                <img src="~/img/iconos/@(logro.Icono).png" class="icon-img" />
+                            </div>
+
+                            <h4>@logro.Titulo</h4>
+                            <p>@logro.Descripcion</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="seccion-titulo">Inventario y Articulos Virtuales</h2>
+
+            <div class="row">
+                @foreach (var articulo in Model.ArticulosVirtuales)
+                {
+                    <div class="col-md-6">
+                        <div class="item-card">
+                            <div class="icono-articulo">
+                                <img src="~/img/iconos/@(articulo.Icono).png" class="icon-img" />
+                            </div>
+
+                            <h4>@articulo.Nombre</h4>
+
+                            <div class="rareza @(articulo.EsUltraRaro ? "ultra-raro" : "raro")">
+                                @articulo.Rareza
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- modal acerca de mi -->
+<div class="modal fade" id="modalAcerca" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content modal-acerca">
+
+            <div class="modal-body">
+
+                <button type="button"
+                        class="btn-close cerrar-modal"
+                        data-bs-dismiss="modal">
+                </button>
+
+                <div class="perfil-modal-header">
+                    <img src="~/img/user-icon.png" class="perfil-img-modal" />
+
+                    <div>
+                        <h2 class="perfil-nombre-modal">
+                            @Model.Nombre
+                        </h2>
+
+                        <div class="perfil-puesto-modal">
+                            @Model.Puesto
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="modal-titulo">
+                    Información Básica
+                </h3>
+
+                <div class="info-row">
+                    <div class="info-label">Nombre:</div>
+                    <div>@Model.Nombre</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">Departamento:</div>
+                    <div>@Model.Departamento</div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">Ubicación:</div>
+                    <div>@Model.Ubicacion</div>
+                </div>
+
+                <form asp-action="GuardarResumen" method="post">
+                @if (TempData["Mensaje"] != null)
+                {
+                    <div class="alert alert-success text-center mt-3">
+                        @TempData["Mensaje"]
+                    </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger text-center mt-3">
+                        @TempData["Error"]
+                    </div>
+                }
+
+                    <h3 class="modal-titulo mt-4">
+                        Resumen Profesional
+                    </h3>
+
+                    <textarea asp-for="ResumenProfesional" class="form-control textarea-resumen" rows="4" maxlength="400"></textarea>
+                        <small class="text-muted"> Máximo 400 caracteres </small>
+
+                    <span asp-validation-for="ResumenProfesional"
+                          class="text-danger">
+                    </span>
+
+                    <h3 class="modal-titulo mt-4">
+                        Habilidades
+                    </h3>
+
+                    <div class="habilidades-box">
+                        @foreach (var habilidad in Model.Habilidades)
+                        {
+                            <span class="habilidad-tag">
+                                @habilidad.Nombre
+                            </span>
+                        }
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal"> Cancelar </button>
+                        
+                        <button type="submit" class="btn btn-canjear"> Guardar cambios </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal confirmar si ir a tienda-->
+
+<div class="modal fade"
+     id="modalConfirmarTienda"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content modal-acerca">
+
+            <div class="modal-body text-center">
+
+                <h4 class="modal-titulo">
+                    ¿Estas seguro que quieres ir a la Tienda Virtual?
+                </h4>
+
+                <div class="mt-4">
+
+                    <!-- boton SI -->
+                    <a asp-controller="Tienda"
+                       asp-action="Index"
+                       class="btn btn-canjear">
+
+                        Si
+
+                    </a>
+
+                    <!-- boton NO -->
+                    <button class="btn btn-cancelar"
+                            data-bs-dismiss="modal">
+
+                        No
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @if (TempData["AbrirModal"] != null)
+    {
+        <script>
+            const modalAcerca = new bootstrap.Modal(document.getElementById('modalAcerca'));
+            modalAcerca.show();
+        </script>
+    }
+}
