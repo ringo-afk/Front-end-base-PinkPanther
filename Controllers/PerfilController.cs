@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using Entrega1_Perfil.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using PinkPanther.Models;
 using System.Collections.Generic;
 
 namespace PinkPanther.Controllers;
 
+[Authorize]
+[Route("Perfil")]
 public class PerfilController : Controller
 {
-    // Guarda temporalmente el resumen mientras corre la app
     private static string resumenGuardado = "Profesional con experiencia en la gestion de proyectos y coordinacion de equipos.";
 
     private readonly ILogger<PerfilController> _logger;
@@ -16,9 +19,9 @@ public class PerfilController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    [HttpGet("")]
+    public IActionResult Perfil()
     {
-        // Crear objeto perfil con datos simulados
         PerfilViewModel perfil = new PerfilViewModel();
 
         perfil.Nombre = "Ana García";
@@ -31,7 +34,6 @@ public class PerfilController : Controller
 
         perfil.ResumenProfesional = resumenGuardado;
 
-        // Lista de logros
         perfil.Logros = new List<Logro>()
         {
             new Logro
@@ -40,7 +42,6 @@ public class PerfilController : Controller
                 Titulo = "Mejor Desempeño",
                 Descripcion = "Supera tus objetivos de ventas por 3 meses consecutivos"
             },
-
             new Logro
             {
                 Icono = "shield",
@@ -49,7 +50,6 @@ public class PerfilController : Controller
             }
         };
 
-        // Lista de articulos virtuales
         perfil.ArticulosVirtuales = new List<ArticuloVirtual>()
         {
             new ArticuloVirtual
@@ -59,7 +59,6 @@ public class PerfilController : Controller
                 Rareza = "Ultra Raro",
                 EsUltraRaro = true
             },
-
             new ArticuloVirtual
             {
                 Icono = "shirt",
@@ -69,7 +68,6 @@ public class PerfilController : Controller
             }
         };
 
-        // Lista de habilidades
         perfil.Habilidades = new List<Habilidad>()
         {
             new Habilidad { Nombre = "Liderazgo" },
@@ -77,17 +75,14 @@ public class PerfilController : Controller
             new Habilidad { Nombre = "Resolución" }
         };
 
-        // Mandar nombre al layout
         ViewBag.NombreUsuario = perfil.Nombre;
 
-        // Usar la vista que dejaste en Views/Home/Perfil.cshtml
         return View("~/Views/Home/Perfil.cshtml", perfil);
     }
 
-    [HttpPost]
+    [HttpPost("GuardarResumen")]
     public IActionResult GuardarResumen(string ResumenProfesional)
     {
-        // Validar resumen profesional
         if (string.IsNullOrWhiteSpace(ResumenProfesional))
         {
             TempData["Error"] = "El resumen profesional es requerido.";
@@ -104,6 +99,6 @@ public class PerfilController : Controller
 
         TempData["AbrirModal"] = "true";
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Perfil");
     }
 }

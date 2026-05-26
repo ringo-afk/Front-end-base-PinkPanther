@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
+using PinkPanther.Services;
 
 namespace PinkPanther.Controllers.Api
 {
@@ -11,11 +10,10 @@ namespace PinkPanther.Controllers.Api
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public AuthController(IHttpClientFactory httpClientFactory)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
-            _httpClientFactory = httpClientFactory;
+            _authService = authService;
         }
 
         public class LoginRequest
@@ -23,15 +21,6 @@ namespace PinkPanther.Controllers.Api
             public string Email { get; set; } = string.Empty;
             public string Password { get; set; } = string.Empty;
             public bool RememberMe { get; set; }
-        }
-
-        public class PythonApiResponse
-        {
-            public bool Success { get; set; }
-            public string Message { get; set; } = string.Empty;
-            public int IdUsuario { get; set; }
-            public string Nombre { get; set; } = string.Empty;
-            public int Kilometros { get; set; }
         }
 
         [HttpPost("login")]
@@ -42,22 +31,9 @@ namespace PinkPanther.Controllers.Api
                 return BadRequest(new { success = false, message = "Faltan credenciales." });
             }
 
-            var client = _httpClientFactory.CreateClient("PythonApi");
-            var pythonApiUrl = "https://127.0.0.1:8000/api/login";
-
-            var payload = new { email = request.Email, password = request.Password };
-            var jsonContent = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-
             try
             {
-                var response = await client.PostAsync(pythonApiUrl, jsonContent);
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    return Unauthorized(new { success = false, message = "Correo o contraseña incorrectos." });
-                }
-
-                var responseData = await response.Content.ReadFromJsonAsync<PythonApiResponse>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var responseData = await _authService.AuthenticateAsync(request.Email, request.Password);
 
                 if (responseData == null || !responseData.Success)
                 {
@@ -96,7 +72,7 @@ namespace PinkPanther.Controllers.Api
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok(new { success = true, redirectUrl = "/Home/Login" });
+            return Ok(new { success = true, redirectUrl = "/Login" });
         }
     }
 }

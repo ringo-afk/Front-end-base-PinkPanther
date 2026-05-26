@@ -9,68 +9,73 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PinkPanther.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/perfil.css" asp-append-version="true" />
+    
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     @{ 
-        var currentAction = "";
-        var actionObj = ViewContext?.RouteData?.Values?[
-            "action"];
-        if (actionObj != null)
-        {
-            currentAction = actionObj.ToString();
-        }
+        // 1. Extraemos tanto el controlador como la acción actual
+        var currentController = ViewContext?.RouteData?.Values?["controller"]?.ToString();
+        var currentAction = ViewContext?.RouteData?.Values?["action"]?.ToString();
 
-        // Variables para las clases de enlace
         var clsIndex = "nav-link text-dark";
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
 
-        if (currentAction == "Index") { clsIndex = clsIndex + " nav-link-activo"; }
-        if (currentAction == "Tienda") { clsTienda = clsTienda + " nav-link-activo"; }
-        if (currentAction == "Privacy") { clsPrivacy = clsPrivacy + " nav-link-activo"; }
+        // 2. Validamos la combinación exacta de Controlador + Acción
+        if (currentController == "Home" && currentAction == "Index") { clsIndex += " nav-link-activo"; }
+        if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
+        if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
 
-        // Información de usuario 
-        var puntos = "5,000";
-        if (ViewData["PuntosUsuario"] != null) { puntos = ViewData["PuntosUsuario"].ToString() ?? puntos; }
-        var nombreUsuario = "Ana García";
-        if (ViewData["NombreUsuario"] != null) { nombreUsuario = ViewData["NombreUsuario"].ToString() ?? nombreUsuario; }
-        var rolUsuario = "Jugador";
-        if (ViewData["RolUsuario"] != null) { rolUsuario = ViewData["RolUsuario"].ToString() ?? rolUsuario; }
+        var puntos = ViewData["PuntosUsuario"]?.ToString() ?? "0";
+        var nombreUsuario = ViewData["NombreUsuario"]?.ToString() ?? "Usuario";
+        var rolUsuario = ViewData["RolUsuario"]?.ToString() ?? "Jugador";
     }
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow barra-principal">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/Imagenes/Whirlpool-imagen.png" alt="Whirlpool" width="150">
-                </a>
-                <div class="menu-superior">
-                    <ul class="navbar-nav menu-centrado">
-                        <li class="nav-item">
-                            <a class="@clsIndex" asp-area="" asp-controller="Home" asp-action="Index">Catálogo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="@clsTienda" asp-area="" asp-controller="Home" asp-action="Tienda">Tienda de personalización</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="@clsPrivacy" asp-area="" asp-controller="Perfil" asp-action="Index">Mi Perfil</a>
-                        </li>
-                    </ul>
 
-                    <div class="panel-perfil">
-                        <div class="pildora-puntos">
-                            <span class="punto-moneda"></span>
-                            @puntos
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow barra-principal" style="padding: 15px 40px;">
+            <div class="container-fluid">
+                
+                <a class="navbar-brand d-flex flex-column" asp-area="" asp-controller="Home" asp-action="Index" style="text-decoration: none;">
+                    <h1 style="margin: 0; font-size: 24px; color: #333; font-weight: bold;">
+                        <img src="~/Imagenes/Whirlpool-imagen.png" alt="Whirlpool" style="height: 30px; vertical-align: middle;" /> 
+                        <span style="color:#f6c042;">|</span> Learning Hub
+                    </h1>
+                    <p style="margin: 0; font-size: 14px; color: #666; padding-left: 5px;">Centro de Aprendizaje de IA</p>
+                </a>
+     
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="menu-superior">
+                        <ul class="navbar-nav menu-centrado" style="gap: 20px;">
+                            <li class="nav-item">
+                                <a class="@clsIndex" asp-area="" asp-controller="Home" asp-action="Index">📖 Catálogo</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="@clsTienda" asp-area="" asp-controller="Home" asp-action="Tienda">🛒 Tienda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="@clsPrivacy" asp-area="" asp-controller="Perfil" asp-action="Perfil">👤 Mi Perfil</a>
+                            </li>
+                        </ul>
+
+                        <div class="panel-perfil">
+                            <div class="pildora-puntos">
+                                <span class="punto-moneda"></span>
+                                @puntos
+                            </div>
+                            <div class="nombre-perfil">
+                                <strong>@nombreUsuario</strong>
+                                <span>@rolUsuario</span>
+                            </div>
+                            <div class="avatar-perfil"></div>
                         </div>
-                        <div class="nombre-perfil">
-                            <strong>@nombreUsuario</strong>
-                            <span>@rolUsuario</span>
-                        </div>
-                        <div class="avatar-perfil"></div>
                     </div>
-                </div>
+                }
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

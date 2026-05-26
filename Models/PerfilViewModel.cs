@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Entrega1_Perfil.Models
+namespace PinkPanther.Models
 {
     public class PerfilViewModel
     {

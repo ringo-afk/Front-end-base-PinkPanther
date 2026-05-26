@@ -49,13 +49,6 @@ namespace PinkPanther.Controllers
         }
 
         [Authorize]
-        public IActionResult Privacy()
-        {
-            CargarDatosPanelUsuario();
-            return View();
-        }
-
-        [Authorize]
         public IActionResult Tienda()
         {
             CargarDatosPanelUsuario();
@@ -175,6 +168,7 @@ namespace PinkPanther.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            
             return View("~/Views/Home/Login.cshtml");
         }
     }

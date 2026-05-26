@@ -1,4 +1,4 @@
-namespace Entrega1_Perfil.Models
+namespace PinkPanther.Models
 {
     public class Habilidad
     {

@@ -1,8 +1,7 @@
-﻿@model Entrega1_Perfil.Models.PerfilViewModel
+﻿@model PinkPanther.Models.PerfilViewModel
 
 <div class="container perfil-contenedor">
 
-    <!-- tarjeta principal del perfil -->
     <div class="perfil-card">
         <div class="row align-items-center">
 
@@ -53,7 +52,6 @@
         </div>
     </div>
 
-    <!-- secciones inferiores -->
     <div class="row mt-5">
 
         <div class="col-md-6">
@@ -103,7 +101,6 @@
 
 </div>
 
-<!-- modal acerca de mi -->
 <div class="modal fade" id="modalAcerca" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-acerca">
@@ -201,8 +198,6 @@
     </div>
 </div>
 
-<!-- modal confirmar si ir a tienda-->
-
 <div class="modal fade"
      id="modalConfirmarTienda"
      tabindex="-1">
@@ -219,7 +214,6 @@
 
                 <div class="mt-4">
 
-                    <!-- boton SI -->
                     <a asp-controller="Tienda"
                        asp-action="Index"
                        class="btn btn-canjear">
@@ -228,7 +222,6 @@
 
                     </a>
 
-                    <!-- boton NO -->
                     <button class="btn btn-cancelar"
                             data-bs-dismiss="modal">
 

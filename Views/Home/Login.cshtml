@@ -1,69 +1,46 @@
 @model PinkPanther.Models.LoginViewModel
 @{
     ViewData["Title"] = "Iniciar Sesión - Learning Hub";
-    Layout = null;
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
+@section Styles {
     <link rel="stylesheet" href="~/css/login.css" />
-</head>
-<body>
+}
 
-    <header class="navbar">
-        <div class="logo-section">
-            <h1><img src="~/Imagenes/Whirlpool-imagen.png" alt="Whirlpool" style="height: 30px; vertical-align: middle;" /> <span style="color:#f6c042;">|</span> Learning Hub</h1>
-            <p>Centro de Aprendizaje de IA</p>
-        </div>
-        <div class="nav-links">
-            <a asp-controller="Home" asp-action="Index">📖 Catálogo</a>
-            <a asp-controller="Home" asp-action="Tienda">🛒 Tienda</a>
-            <a asp-controller="Home" asp-action="Privacy">👤 Mi Perfil</a>
-            <div class="avatar-circle">👤</div>
-        </div>
-    </header>
+<main class="main-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="header-text" style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #1a365d;">Bienvenido al Learning Hub</h2>
+        <p style="color: #666;">Inicia sesión para acceder al Centro de Aprendizaje de IA</p>
+    </div>
 
-    <main class="main-container">
-        <div class="header-text">
-            <h2>Bienvenido al Learning Hub</h2>
-            <p>Inicia sesión para acceder al Centro de Aprendizaje de IA</p>
-        </div>
+    <div class="login-card" style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; max-width: 400px;">
+        <form id="loginForm" novalidate>
+            
+            <div id="serverError" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; display: none;"></div>
 
-        <div class="login-card">
-            <form id="loginForm" novalidate>
-                
-                <div id="serverError" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; display: none;"></div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label asp-for="Email" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Correo electrónico</label>
+                <input asp-for="Email" class="form-control" placeholder="tu.email@whirlpool.com" id="emailInput" />
+                <span id="emailError" class="error-message" style="color: #dc2626; font-size: 12px; display: none;">Ingresa un correo válido</span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="Email">Correo electrónico</label>
-                    <input asp-for="Email" class="form-control" placeholder="tu.email@@whirlpool.com" id="emailInput" />
-                    <span id="emailError" class="error-message">Ingresa un correo válido (ej. usuario@@whirlpool.com)</span>
-                </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label asp-for="Password" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Contraseña</label>
+                <input asp-for="Password" class="form-control" placeholder="********" id="passwordInput" type="password" />
+                <span id="passwordError" class="error-message" style="color: #dc2626; font-size: 12px; display: none;">La contraseña es requerida</span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="Password">Contraseña</label>
-                    <input asp-for="Password" class="form-control" placeholder="********" id="passwordInput" type="password" />
-                    <span id="passwordError" class="error-message">La contraseña es requerida</span>
-                </div>
+            <div class="checkbox-group" style="display: flex; align-items: center; margin-bottom: 25px;">
+                <input asp-for="RememberMe" id="rememberMe" style="margin-right: 8px;" />
+                <label asp-for="RememberMe" style="margin:0; font-weight:normal;">Recordarme</label>
+            </div>
 
-                <div class="checkbox-group">
-                    <input asp-for="RememberMe" id="rememberMe" />
-                    <label asp-for="RememberMe" style="margin:0; font-weight:normal;">Recordarme</label>
-                </div>
+            <button type="submit" class="btn-submit" id="submitBtn" style="width: 100%; padding: 12px; background-color: #f6c042; color: #333; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Iniciar Sesión</button>
+        </form>
+    </div>
+</main>
 
-                <button type="submit" class="btn-submit" id="submitBtn">Iniciar Sesión</button>
-            </form>
-        </div>
-    </main>
-
-    <footer class="footer">
-        ¿Necesitas ayuda? <a href="#">Contacta al soporte</a>
-    </footer>
-
+@section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('loginForm');
@@ -135,5 +112,4 @@
             });
         });
     </script>
-</body>
-</html>
+}
