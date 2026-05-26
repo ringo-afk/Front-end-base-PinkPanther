@@ -34,9 +34,9 @@
         </div>
 
         <div class="login-card">
-            <form id="loginForm" asp-action="Login" method="post" novalidate>
+            <form id="loginForm" novalidate>
                 
-                <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 15px; font-size: 14px;"></div>
+                <div id="serverError" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; display: none;"></div>
 
                 <div class="form-group">
                     <label asp-for="Email">Correo electrónico</label>
@@ -46,7 +46,7 @@
 
                 <div class="form-group">
                     <label asp-for="Password">Contraseña</label>
-                    <input asp-for="Password" class="form-control" placeholder="********" id="passwordInput" />
+                    <input asp-for="Password" class="form-control" placeholder="********" id="passwordInput" type="password" />
                     <span id="passwordError" class="error-message">La contraseña es requerida</span>
                 </div>
 
@@ -69,13 +69,18 @@
             const form = document.getElementById('loginForm');
             const emailInput = document.getElementById('emailInput');
             const passwordInput = document.getElementById('passwordInput');
+            const rememberMeInput = document.getElementById('rememberMe');
+            
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
+            const serverError = document.getElementById('serverError');
 
             const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
 
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
                 let isValid = true;
+                serverError.style.display = 'none';
 
                 if (!emailInput.value || !emailRegex.test(emailInput.value)) {
                     emailError.style.display = 'block';
@@ -95,8 +100,30 @@
                     passwordInput.style.borderColor = '#d1d5db';
                 }
 
-                if (!isValid) {
-                    e.preventDefault();
+                if (!isValid) return;
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: emailInput.value,
+                            password: passwordInput.value,
+                            rememberMe: rememberMeInput.checked
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        serverError.textContent = result.message || "Error al iniciar sesión.";
+                        serverError.style.display = 'block';
+                    }
+                } catch (error) {
+                    serverError.textContent = "Error de conexión con el servidor.";
+                    serverError.style.display = 'block';
                 }
             });
 
