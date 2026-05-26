@@ -1,21 +1,13 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PinkPanther.Models;
+using System.Security.Claims;
 
 namespace PinkPanther.Controllers
 {
     public class HomeController : Controller
     {
-
-        // aquí guardamos el usuario de prueba que se muestra en la pantalla
-        private static readonly UsuarioJuego UsuarioActual = new UsuarioJuego
-        {
-            Nombre = "Ana García",
-            Rol = "Jugador",
-            PuntosDisponibles = 5000
-        };
-
-        // este es el catálogo falso que usamos para simular la tienda
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
         {
             new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
@@ -28,64 +20,76 @@ namespace PinkPanther.Controllers
             new ObjetoTienda { Id = 8, Nombre = "Carro Deportivo", Categoria = "Auto", CostoPuntos = 6000, RutaImagen = "~/Imagenes/Carro-deportivo.png" }
         };
 
-        // aquí marcamos los objetos que ya se compraron en la demo
         private static List<int> ObjetosAdquiridos = new List<int> { 3 };
-        // este objeto arranca equipado para que la vista ya tenga un caso especial
         private static int? ObjetoEquipadoId = 6;
 
+        private UsuarioJuego ObtenerUsuarioLogueado()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var nombre = User.FindFirst(ClaimTypes.GivenName)?.Value ?? "Usuario";
+                var puntuacionStr = User.FindFirst("Puntuacion")?.Value ?? "0";
+                int.TryParse(puntuacionStr, out int puntos);
+
+                return new UsuarioJuego
+                {
+                    Nombre = nombre,
+                    Rol = "Jugador",
+                    PuntosDisponibles = puntos
+                };
+            }
+            return new UsuarioJuego { Nombre = "Invitado", Rol = "Ninguno", PuntosDisponibles = 0 };
+        }
+
+        [Authorize]
         public IActionResult Index()
         {
-            // llenamos los datos básicos del panel antes de mostrar la vista
             CargarDatosPanelUsuario();
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
         {
-            // la vista de perfil también necesita los datos del usuario
             CargarDatosPanelUsuario();
             return View();
         }
 
+        [Authorize]
         public IActionResult Tienda()
         {
-            // aquí armamos todo lo que necesita la pantalla de tienda
             CargarDatosPanelUsuario();
-            var model = ConstruirTiendaViewModel();
+            var usuario = ObtenerUsuarioLogueado();
+            var model = ConstruirTiendaViewModel(usuario);
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Comprar(int objetoId)
         {
-            
-            // buscamos el producto que el usuario intentó comprar
+            var usuario = ObtenerUsuarioLogueado();
             ObjetoTienda? objeto = CatalogoBase.Find(item => item.Id == objetoId);
 
             if (objeto == null)
             {
-                // si no existe, regresamos el error a la vista
                 TempData["CompraError"] = "No se encontró el objeto seleccionado.";
                 return RedirectToAction("Tienda");
             }
 
             if (ObjetosAdquiridos.Contains(objeto.Id) || ObjetoEquipadoId == objeto.Id)
             {
-                // si ya lo tiene o está equipado, no dejamos repetir la compra
                 TempData["CompraError"] = objeto.Nombre + " ya forma parte de tu inventario.";
                 return RedirectToAction("Tienda");
             }
 
-            if (objeto.CostoPuntos > UsuarioActual.PuntosDisponibles)
+            if (objeto.CostoPuntos > usuario.PuntosDisponibles)
             {
-                // aquí revisamos que sí haya puntos suficientes
                 TempData["CompraError"] = "No tienes puntos suficientes para comprar " + objeto.Nombre + ".";
                 return RedirectToAction("Tienda");
             }
 
-            // si pasa todos los filtros, descontamos puntos y guardamos la compra
-            UsuarioActual.PuntosDisponibles -= objeto.CostoPuntos;
             ObjetosAdquiridos.Add(objeto.Id);
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
@@ -93,34 +97,30 @@ namespace PinkPanther.Controllers
 
         private void CargarDatosPanelUsuario()
         {
-            // mandamos la info del usuario a la cabecera y al layout
-            ViewData["NombreUsuario"] = UsuarioActual.Nombre;
-            ViewData["RolUsuario"] = UsuarioActual.Rol;
-            ViewData["PuntosUsuario"] = UsuarioActual.PuntosDisponibles.ToString("N0");
+            var usuario = ObtenerUsuarioLogueado();
+            ViewData["NombreUsuario"] = usuario.Nombre;
+            ViewData["RolUsuario"] = usuario.Rol;
+            ViewData["PuntosUsuario"] = usuario.PuntosDisponibles.ToString("N0");
         }
 
-        private static TiendaViewModel ConstruirTiendaViewModel()
+        private static TiendaViewModel ConstruirTiendaViewModel(UsuarioJuego usuarioActual)
         {
             var objetos = new List<ObjetoTienda>();
 
-            // recorremos todo el catálogo para decidir qué estado tiene cada artículo
             foreach (var item in CatalogoBase)
             {
                 var estado = EstadoObjetoTienda.Disponible;
 
                 if (ObjetoEquipadoId == item.Id)
                 {
-                    // si es el equipado, lo mostramos como equipado
                     estado = EstadoObjetoTienda.Equipado;
                 }
                 else if (ObjetosAdquiridos.Contains(item.Id))
                 {
-                    // si ya fue comprado, lo marcamos como adquirido
                     estado = EstadoObjetoTienda.Adquirido;
                 }
-                else if (item.CostoPuntos > UsuarioActual.PuntosDisponibles)
+                else if (item.CostoPuntos > usuarioActual.PuntosDisponibles)
                 {
-                    // si no alcanza el saldo, queda bloqueado
                     estado = EstadoObjetoTienda.Bloqueado;
                 }
 
@@ -139,17 +139,9 @@ namespace PinkPanther.Controllers
                 objetos.Add(obj);
             }
 
-            // clonamos los datos del usuario para mandarlos al modelo de la vista
-            var usuario = new UsuarioJuego
-            {
-                Nombre = UsuarioActual.Nombre,
-                Rol = UsuarioActual.Rol,
-                PuntosDisponibles = UsuarioActual.PuntosDisponibles
-            };
-
             var model = new TiendaViewModel
             {
-                Usuario = usuario,
+                Usuario = usuarioActual,
                 Objetos = objetos
             };
 
@@ -158,21 +150,13 @@ namespace PinkPanther.Controllers
 
         private static string ObtenerTextoConfirmacion(string nombreObjeto)
         {
-            // esto es para que el texto suene más natural al confirmar la compra
-            if (nombreObjeto == "Chamarra Élite")
-             return "la Chamarra Élite";
-            if (nombreObjeto == "Lentes VR de Neón") 
-            return "los Lentes VR de Neón";
-            if (nombreObjeto == "Rines Carro") 
-            return "los Rines Carro";
-            if (nombreObjeto == "Carro Moderno") 
-            return "el Carro Moderno";
-            if (nombreObjeto == "Gorra Negra") 
-            return "la Gorra Negra";
-            if (nombreObjeto == "Casco Ingeniero")
-             return "el Casco Ingeniero";
-            if (nombreObjeto == "Objeto Aleatorio") 
-            return "el Objeto Aleatorio";
+            if (nombreObjeto == "Chamarra Élite") return "la Chamarra Élite";
+            if (nombreObjeto == "Lentes VR de Neón") return "los Lentes VR de Neón";
+            if (nombreObjeto == "Rines Carro") return "los Rines Carro";
+            if (nombreObjeto == "Carro Moderno") return "el Carro Moderno";
+            if (nombreObjeto == "Gorra Negra") return "la Gorra Negra";
+            if (nombreObjeto == "Casco Ingeniero") return "el Casco Ingeniero";
+            if (nombreObjeto == "Objeto Aleatorio") return "el Objeto Aleatorio";
             if (nombreObjeto == "Carro Deportivo") return "el Carro Deportivo";
             return nombreObjeto;
         }
@@ -181,6 +165,17 @@ namespace PinkPanther.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        [Route("Login")]
+        public IActionResult Login()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View("~/Views/Home/Login.cshtml");
         }
     }
 }

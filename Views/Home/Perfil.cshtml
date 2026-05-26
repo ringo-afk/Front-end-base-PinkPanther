@@ -9,7 +9,7 @@
             <div class="col-md-6 perfil-left">
 
                 <div class="foto-perfil-box">
-                    <img id="fotoPerfil" src="~/img/user-icon.png" class="perfil-img" />
+                    <img id="fotoPerfil" src="~/Imagenes/user-icon.png" class="perfil-img" />
                 </div>
 
                 <div>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="puntos-numero">
-                    <img src="~/img/iconos/coin.png" class="coin-img" />
+                    <img src="~/Imagenes/iconos/coin.png" class="coin-img" />
                     @Model.PuntosDigitales
                 </div>
 
@@ -65,7 +65,7 @@
                     <div class="col-md-6">
                         <div class="item-card">
                             <div class="icono-logro">
-                                <img src="~/img/iconos/@(logro.Icono).png" class="icon-img" />
+                                <img src="~/Imagenes/iconos/@(logro.Icono).png" class="icon-img" />
                             </div>
 
                             <h4>@logro.Titulo</h4>
@@ -85,7 +85,7 @@
                     <div class="col-md-6">
                         <div class="item-card">
                             <div class="icono-articulo">
-                                <img src="~/img/iconos/@(articulo.Icono).png" class="icon-img" />
+                                <img src="~/Imagenes/iconos/@(articulo.Icono).png" class="icon-img" />
                             </div>
 
                             <h4>@articulo.Nombre</h4>
@@ -116,7 +116,7 @@
                 </button>
 
                 <div class="perfil-modal-header">
-                    <img src="~/img/user-icon.png" class="perfil-img-modal" />
+                    <img src="~/Imagenes/user-icon.png" class="perfil-img-modal" />
 
                     <div>
                         <h2 class="perfil-nombre-modal">
@@ -148,7 +148,7 @@
                     <div>@Model.Ubicacion</div>
                 </div>
 
-                <form asp-action="GuardarResumen" method="post">
+                <form asp-controller="Perfil" asp-action="GuardarResumen" method="post">
                 @if (TempData["Mensaje"] != null)
                 {
                     <div class="alert alert-success text-center mt-3">
