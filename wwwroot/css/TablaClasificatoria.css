@@ -343,3 +343,55 @@ body {
     order: 3;          /* derecha */
     transform: translateY(30px) translateX(-5px);
 }
+
+.usuario-actual-card{
+    width: 100%;
+    background: white;
+    border: 4px solid #e0b000;
+    border-radius: 24px;
+    padding: 25px 30px;
+    margin: 35px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    transition: .25s ease;
+}
+
+.usuario-actual-card:hover{
+    transform: translateY(-2px);
+}
+
+.titulo-usuario{
+    font-size: 14px;
+    font-weight: 700;
+    color: #e0b000;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.contenido-usuario{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.usuario-nombre{
+    font-size: 30px;
+    font-weight: 700;
+    color: #002f6c;
+}
+
+.usuario-departamento{
+    padding: 8px 16px;
+    background: #dfe8f5;
+    border-radius: 20px;
+    font-size: 15px;
+    color: #002f6c;
+    font-weight: 500;
+}
+
+.usuario-km{
+    font-size: 28px;
+    font-weight: 700;
+    color: #e0b000;
+}

@@ -103,7 +103,44 @@
 
     </div>
 
-    <!-- RESTO -->
+
+    @{
+        var usuarioActual = "Miguel Rojas";
+
+        var usuarioLogueado = Model.FirstOrDefault(u =>
+        u.NombreUsuario == usuarioActual);
+    }
+
+    @if (usuarioLogueado != null)
+    {
+        <div class="usuario-actual-card">
+        <div class="titulo-usuario">
+            TU POSICIÓN: 3
+        </div>
+
+        <div class="contenido-usuario">
+            <span class="usuario-nombre">
+                @usuarioLogueado.NombreUsuario
+            </span>
+
+            <span class="usuario-departamento">
+                @usuarioLogueado.NombreDepartamento
+            </span>
+             <div class="ranking-km">
+                    <div class="label">
+                        Kilometros
+                    </div>
+
+                    <div>
+
+                        @usuarioLogueado.KilometrosTotales KM
+
+                    </div>
+
+                </div>
+        </div>
+    </div>
+    }
 
     <div class="ranking-list">
 
