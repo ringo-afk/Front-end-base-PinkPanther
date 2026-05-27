@@ -13,30 +13,46 @@ public class CatalogoService : ICatalogoService
 
     public async Task<List<Juego>> ObtenerJuegosAsync()
     {
-        var client = _httpClientFactory.CreateClient("CatalogoApi");
-        var url = "https://127.0.0.1:8001/juegos";
+        try
+        {
+            var client = _httpClientFactory.CreateClient("CatalogoApi");
+            var url = "https://127.0.0.1:8001/juegos";
 
-        var response = await client.GetAsync(url);
+            var response = await client.GetAsync(url);
 
-        if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
+                return new List<Juego>();
+
+            return await response.Content.ReadFromJsonAsync<List<Juego>>(
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            ) ?? new List<Juego>();
+        }
+        catch (Exception)
+        {
             return new List<Juego>();
-
-        return await response.Content.ReadFromJsonAsync<List<Juego>>(
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-        ) ?? new List<Juego>();
+           
+        }
     }
 
     public async Task<List<Juego>> ObtenerJuegosPorDificultadAsync(string dificultad)
     {
-        var client = _httpClientFactory.CreateClient("CatalogoApi");
-        var url = $"https://127.0.0.1:8001/juegos/dificultad/{dificultad}";
-        var response = await client.GetAsync(url);
+        try
+        {
+            var client = _httpClientFactory.CreateClient("CatalogoApi");
+            var url = $"https://127.0.0.1:8001/juegos/dificultad/{dificultad}";
+            var response = await client.GetAsync(url);
 
-        if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
+                return new List<Juego>();
+
+            return await response.Content.ReadFromJsonAsync<List<Juego>>(
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            ) ?? new List<Juego>();
+        }
+        catch (Exception)
+        {
             return new List<Juego>();
 
-        return await response.Content.ReadFromJsonAsync<List<Juego>>(
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-        ) ?? new List<Juego>();
+        }
     }
 }
