@@ -42,14 +42,14 @@ namespace PinkPanther.Services
             return new UsuarioJuego { Nombre = "Invitado", Rol = "Ninguno", PuntosDisponibles = 0 };
         }
 
-        //[Authorize]
+        [Authorize]
         public IActionResult Index()
         {
             CargarDatosPanelUsuario();
             return View();
         }
 
-        //[Authorize]
+        [Authorize]
         public IActionResult Tienda()
         {
             CargarDatosPanelUsuario();
@@ -60,7 +60,7 @@ namespace PinkPanther.Services
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize]
+        [Authorize]
         public IActionResult Comprar(int objetoId)
         {
             var usuario = ObtenerUsuarioLogueado();
