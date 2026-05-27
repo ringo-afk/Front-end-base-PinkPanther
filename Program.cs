@@ -8,40 +8,22 @@ builder.Services.AddHttpClient("PythonApi")
         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
     });
 
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddHttpClient("CatalogoApi")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Login";
-        options.LogoutPath = "/api/auth/logout";
-        options.ExpireTimeSpan = TimeSpan.FromDays(1);
-    });
-builder.Services.AddHttpClient<IUsuarioService, UsuarioService>()
-    .ConfigurePrimaryHttpMessageHandler(() =>
-    {
-        return new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback =
-                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-        };
-    });
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromDays(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-// API para catalogo de juegos
-builder.Services.AddHttpClient("CatalogoApi")
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-    {
-        ServerCertificateCustomValidationCallback =
-            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-    });
-
-builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();

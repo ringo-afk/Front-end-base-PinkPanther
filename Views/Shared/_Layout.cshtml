@@ -18,11 +18,11 @@
         var currentController = ViewContext?.RouteData?.Values?["controller"]?.ToString();
         var currentAction = ViewContext?.RouteData?.Values?["action"]?.ToString();
 
-        var clsIndex = "nav-link text-dark";
+        var clsCatalogo = "nav-link text-dark";
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
 
-        if (currentController == "Home" && currentAction == "Index") { clsIndex += " nav-link-activo"; }
+        if (currentController == "Home" && currentAction == "Catalogo") { clsCatalogo += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
         if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
 
@@ -48,7 +48,7 @@
                     <div class="menu-superior">
                         <ul class="navbar-nav menu-centrado" style="gap: 20px;">
                             <li class="nav-item">
-                                <a class="@clsIndex" asp-area="" asp-controller="Home" asp-action="Index">📖 Catálogo</a>
+                                <a class="@clsCatalogo" asp-area="" asp-controller="Home" asp-action="Catalogo">📖 Catálogo</a>
                             </li>
                             <li class="nav-item">
                                 <a class="@clsTienda" asp-area="" asp-controller="Home" asp-action="Tienda">🛒 Tienda</a>

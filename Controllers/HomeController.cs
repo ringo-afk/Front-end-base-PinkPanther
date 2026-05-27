@@ -12,10 +12,11 @@ namespace PinkPanther.Services
         // Catalogo Juegos
         private readonly ICatalogoService _catalogoService;
 
-        public HomeController(ICatalogoService catalogoService)
-        {
-            _catalogoService = catalogoService;
-        }        
+        public HomeController(ICatalogoService catalogoService, IUsuarioService usuarioService)
+    {
+        _catalogoService = catalogoService;
+        _usuarioService = usuarioService;
+    } 
 
         // Tienda
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
@@ -76,7 +77,6 @@ namespace PinkPanther.Services
             return View(model);
         }
         
-        [Authorize]
         public async Task<IActionResult> Catalogo(string dificultad)
         {
             CargarDatosPanelUsuario();
@@ -212,11 +212,6 @@ namespace PinkPanther.Services
             return View("~/Views/Home/Login.cshtml");
         }
         private readonly IUsuarioService _usuarioService;
-
-        public HomeController(IUsuarioService usuarioService)
-        {
-            _usuarioService = usuarioService;
-        }
 
         public async Task<IActionResult> TablaClasificatoria()
         {
