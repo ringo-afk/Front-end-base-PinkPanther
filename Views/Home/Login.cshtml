@@ -14,29 +14,33 @@
     </div>
 
     <div class="login-card" style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; max-width: 400px;">
-        <form id="loginForm" novalidate>
+        
+        <form asp-controller="Home" asp-action="Login" method="post">
             
-            <div id="serverError" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; display: none;"></div>
+            <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; text-align: center;"></div>
 
             <div class="form-group" style="margin-bottom: 20px;">
                 <label asp-for="Email" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Correo electrónico</label>
-                <input asp-for="Email" class="form-control" placeholder="tu.email@whirlpool.com" id="emailInput" />
-                <span id="emailError" class="error-message" style="color: #dc2626; font-size: 12px; display: none;">Ingresa un correo válido</span>
+                <input asp-for="Email" class="form-control" placeholder="tu.email@whirlpool.com" />
+                <span asp-validation-for="Email" style="color: #dc2626; font-size: 12px; display: block; margin-top: 5px;"></span>
             </div>
 
             <div class="form-group" style="margin-bottom: 20px;">
                 <label asp-for="Password" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Contraseña</label>
-                <input asp-for="Password" class="form-control" placeholder="********" id="passwordInput" type="password" />
-                <span id="passwordError" class="error-message" style="color: #dc2626; font-size: 12px; display: none;">La contraseña es requerida</span>
+                <input asp-for="Password" class="form-control" placeholder="********" type="password" />
+                <span asp-validation-for="Password" style="color: #dc2626; font-size: 12px; display: block; margin-top: 5px;"></span>
             </div>
 
             <div class="checkbox-group" style="display: flex; align-items: center; margin-bottom: 25px;">
-                <input asp-for="RememberMe" id="rememberMe" style="margin-right: 8px;" />
+                <input asp-for="RememberMe" style="margin-right: 8px;" />
                 <label asp-for="RememberMe" style="margin:0; font-weight:normal;">Recordarme</label>
             </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn" style="width: 100%; padding: 12px; background-color: #f6c042; color: #333; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Iniciar Sesión</button>
+            <button type="submit" class="btn-submit" style="width: 100%; padding: 12px; background-color: #f6c042; color: #333; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                Iniciar Sesión
+            </button>
         </form>
+
     </div>
     <br/>
     <br/>
@@ -47,75 +51,5 @@
 </main>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('loginForm');
-            const emailInput = document.getElementById('emailInput');
-            const passwordInput = document.getElementById('passwordInput');
-            const rememberMeInput = document.getElementById('rememberMe');
-            
-            const emailError = document.getElementById('emailError');
-            const passwordError = document.getElementById('passwordError');
-            const serverError = document.getElementById('serverError');
-
-            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-
-            form.addEventListener('submit', async function (e) {
-                e.preventDefault();
-                let isValid = true;
-                serverError.style.display = 'none';
-
-                if (!emailInput.value || !emailRegex.test(emailInput.value)) {
-                    emailError.style.display = 'block';
-                    emailInput.style.borderColor = '#dc2626';
-                    isValid = false;
-                } else {
-                    emailError.style.display = 'none';
-                    emailInput.style.borderColor = '#d1d5db';
-                }
-
-                if (!passwordInput.value) {
-                    passwordError.style.display = 'block';
-                    passwordInput.style.borderColor = '#dc2626';
-                    isValid = false;
-                } else {
-                    passwordError.style.display = 'none';
-                    passwordInput.style.borderColor = '#d1d5db';
-                }
-
-                if (!isValid) return;
-
-                try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: emailInput.value,
-                            password: passwordInput.value,
-                            rememberMe: rememberMeInput.checked
-                        })
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.success) {
-                        window.location.href = result.redirectUrl;
-                    } else {
-                        serverError.textContent = result.message || "Error al iniciar sesión.";
-                        serverError.style.display = 'block';
-                    }
-                } catch (error) {
-                    serverError.textContent = "Error de conexión con el servidor.";
-                    serverError.style.display = 'block';
-                }
-            });
-
-            emailInput.addEventListener('input', function() {
-                if(emailRegex.test(emailInput.value)) {
-                    emailError.style.display = 'none';
-                    emailInput.style.borderColor = '#d1d5db';
-                }
-            });
-        });
-    </script>
+    <partial name="_ValidationScriptsPartial" />
 }

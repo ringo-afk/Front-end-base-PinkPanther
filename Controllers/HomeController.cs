@@ -9,16 +9,17 @@ namespace PinkPanther.Services
 {
     public class HomeController : Controller
     {
-        // Catalogo Juegos
         private readonly ICatalogoService _catalogoService;
+        private readonly IUsuarioService _usuarioService;
+        private readonly IAuthService _authService;
 
-        public HomeController(ICatalogoService catalogoService, IUsuarioService usuarioService)
-    {
-        _catalogoService = catalogoService;
-        _usuarioService = usuarioService;
-    } 
+        public HomeController(ICatalogoService catalogoService, IUsuarioService usuarioService, IAuthService authService)
+        {
+            _catalogoService = catalogoService;
+            _usuarioService = usuarioService;
+            _authService = authService;
+        } 
 
-        // Tienda
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
         {
             new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
@@ -34,7 +35,6 @@ namespace PinkPanther.Services
         private static List<int> ObjetosAdquiridos = new List<int> { 3 };
         private static int? ObjetoEquipadoId = 6;
 
-        // Login
         private UsuarioJuego ObtenerUsuarioLogueado()
         {
             var nombre = HttpContext.Session.GetString("NombreUsuario");
@@ -128,6 +128,7 @@ namespace PinkPanther.Services
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
         }
+
         private void CargarDatosPanelUsuario()
         {
             var usuario = ObtenerUsuarioLogueado();
@@ -211,12 +212,35 @@ namespace PinkPanther.Services
             
             return View("~/Views/Home/Login.cshtml");
         }
-        private readonly IUsuarioService _usuarioService;
+
+        [HttpPost]
+        [Route("Login")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Home/Login.cshtml", model);
+            }
+
+            var resultadoLogin = await _authService.AuthenticateAsync(model.Email, model.Password);
+
+            if (resultadoLogin != null && resultadoLogin.Success)
+            {
+                HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
+                HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
+                
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, resultadoLogin?.Message ?? "Correo o contraseña incorrectos.");
+            
+            return View("~/Views/Home/Login.cshtml", model);
+        }
 
         public async Task<IActionResult> TablaClasificatoria()
         {
-            var usuarios =
-                await _usuarioService.ObtenerUsuarios();
+            var usuarios = await _usuarioService.ObtenerUsuarios();
             return View(usuarios);
         }
     }
