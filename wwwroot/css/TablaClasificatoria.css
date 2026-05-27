@@ -8,16 +8,17 @@ html {
   }
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     background: #f5f5f5;
+}
+
+.seccion-clasificacion {
     font-family: 'Poppins', sans-serif;
     color: #002f6c;
+}
+
+.seccion-clasificacion * {
+    box-sizing: border-box;
 }
 
 .container {

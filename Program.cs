@@ -16,7 +16,12 @@ builder.Services.AddHttpClient("CatalogoApi")
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+builder.Services.AddHttpClient<IUsuarioService, UsuarioService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
 
 builder.Services.AddSession(options =>
 {
