@@ -18,6 +18,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/api/auth/logout";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
     });
+builder.Services.AddHttpClient<IUsuarioService, UsuarioService>()
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        return new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+    });
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();

@@ -1,0 +1,208 @@
+@model List<PinkPanther.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Whirlpool Racing Challenge";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/TablaClasificatoria.css" />
+}
+
+<link rel="stylesheet" href="~/css/site.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<div class="container">
+
+    <h1 class="title">
+         Whirlpool Racing Challenge 
+    </h1>
+
+    <p class="subtitle">
+        Tabla de Posiciones
+    </p>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <i class="search-icon" data-lucide="search"></i>
+
+        <input type="text"
+               id="searchInput"
+               placeholder="Buscar por nombre o departamento..." />
+
+    </div>
+
+    <!-- TOP 3 -->
+
+    <div class="top-three">
+
+        @for (int i = 0; i < Math.Min(3, Model.Count); i++)
+        {
+            var usuario = Model[i];
+
+            string clase = "";
+
+            if (i == 0)
+                clase = "gold";
+
+            else if (i == 1)
+                clase = "silver";
+
+            else
+                clase = "bronze";
+
+            <div class="card @clase user-card"
+                 data-name="@usuario.NombreUsuario.ToLower()"
+                 data-department="@usuario.NombreDepartamento.ToLower()">
+
+                <div class="position">
+                    #@(i + 1)
+                </div>
+
+                <div class="avatar">
+
+                    @usuario.NombreUsuario.Substring(0,1)
+
+                </div>
+
+                <div class="name">
+
+                    @usuario.NombreUsuario
+
+                </div>
+
+                <div class="tag">
+
+                    @usuario.NombreDepartamento
+
+                </div>
+
+                <div class="stats">
+
+                    <div class="box km">
+
+                        <div class="label">
+                            Kilómetros
+                        </div>
+
+                        <div class="value">
+                            @usuario.KilometrosTotales
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- RESTO -->
+
+    <div class="ranking-list">
+
+        @for (int i = 3; i < Model.Count; i++)
+        {
+            var usuario = Model[i];
+
+            <div class="ranking-item user-card"
+                 data-name="@usuario.NombreUsuario.ToLower()"
+                 data-department="@usuario.NombreDepartamento.ToLower()">
+
+                <div class="ranking-left">
+
+                    <div class="ranking-number">
+                        #@(i + 1)
+                    </div>
+
+                    <div class="small-avatar">
+
+                        @usuario.NombreUsuario.Substring(0,1)
+
+                    </div>
+
+                    <div>
+
+                        <div class="ranking-name">
+
+                            @usuario.NombreUsuario
+
+                        </div>
+
+                        <div class="ranking-department">
+
+                            @usuario.NombreDepartamento
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="ranking-km">
+                    <div class="label">
+                        Kilometros
+                    </div>
+
+                    <div>
+
+                        @usuario.KilometrosTotales KM
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+<script>
+
+    lucide.createIcons();
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    searchInput.addEventListener("keyup", function () {
+
+        const search =
+            this.value.toLowerCase();
+
+        const cards =
+            document.querySelectorAll(".user-card");
+
+        cards.forEach(card => {
+
+            const name =
+                card.dataset.name;
+
+            const department =
+                card.dataset.department;
+
+            const matches =
+                name.includes(search) ||
+                department.includes(search);
+
+            if(matches)
+            {
+                card.style.display = "";
+            }
+            else
+            {
+                card.style.display = "none";
+            }
+
+        });
+
+    });
+
+</script>

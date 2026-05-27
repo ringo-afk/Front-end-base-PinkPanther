@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using PinkPanther.Models;
 using System.Security.Claims;
 
-namespace PinkPanther.Controllers
+namespace PinkPanther.Services
 {
     public class HomeController : Controller
     {
+
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
         {
             new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
@@ -41,14 +42,14 @@ namespace PinkPanther.Controllers
             return new UsuarioJuego { Nombre = "Invitado", Rol = "Ninguno", PuntosDisponibles = 0 };
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult Index()
         {
             CargarDatosPanelUsuario();
             return View();
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult Tienda()
         {
             CargarDatosPanelUsuario();
@@ -59,7 +60,7 @@ namespace PinkPanther.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        //[Authorize]
         public IActionResult Comprar(int objetoId)
         {
             var usuario = ObtenerUsuarioLogueado();
@@ -87,7 +88,6 @@ namespace PinkPanther.Controllers
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
         }
-
         private void CargarDatosPanelUsuario()
         {
             var usuario = ObtenerUsuarioLogueado();
@@ -170,6 +170,19 @@ namespace PinkPanther.Controllers
             }
             
             return View("~/Views/Home/Login.cshtml");
+        }
+        private readonly IUsuarioService _usuarioService;
+
+        public HomeController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
+
+        public async Task<IActionResult> TablaClasificatoria()
+        {
+            var usuarios =
+                await _usuarioService.ObtenerUsuarios();
+            return View(usuarios);
         }
     }
 }
