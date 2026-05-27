@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using PinkPanther.Services;
 
 namespace PinkPanther.Controllers.Api
@@ -11,6 +8,7 @@ namespace PinkPanther.Controllers.Api
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -40,24 +38,9 @@ namespace PinkPanther.Controllers.Api
                     return Unauthorized(new { success = false, message = responseData?.Message ?? "Correo o contraseña incorrectos." });
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, responseData.IdUsuario.ToString()),
-                    new Claim(ClaimTypes.Name, request.Email),
-                    new Claim(ClaimTypes.GivenName, responseData.Nombre),
-                    new Claim("Puntuacion", responseData.Kilometros.ToString())
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    new AuthenticationProperties 
-                    { 
-                        IsPersistent = request.RememberMe,
-                        ExpiresUtc = request.RememberMe ? DateTime.UtcNow.AddDays(7) : null
-                    });
+                HttpContext.Session.SetInt32("IdUsuario", responseData.IdUsuario);
+                HttpContext.Session.SetString("NombreUsuario", responseData.Nombre);
+                HttpContext.Session.SetInt32("PuntosUsuario", responseData.Kilometros);
 
                 return Ok(new { success = true, redirectUrl = "/Home/Index" });
             }
@@ -69,9 +52,9 @@ namespace PinkPanther.Controllers.Api
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return Ok(new { success = true, redirectUrl = "/Login" });
         }
     }

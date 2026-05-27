@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using PinkPanther.Models;
 using PinkPanther.Services;
 using System.Security.Claims;
@@ -36,32 +36,40 @@ namespace PinkPanther.Controllers
         // Login
         private UsuarioJuego ObtenerUsuarioLogueado()
         {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                var nombre = User.FindFirst(ClaimTypes.GivenName)?.Value ?? "Usuario";
-                var puntuacionStr = User.FindFirst("Puntuacion")?.Value ?? "0";
-                int.TryParse(puntuacionStr, out int puntos);
+            var nombre = HttpContext.Session.GetString("NombreUsuario");
+            var puntos = HttpContext.Session.GetInt32("PuntosUsuario");
 
+            if (nombre != null)
+            {
                 return new UsuarioJuego
                 {
                     Nombre = nombre,
                     Rol = "Jugador",
-                    PuntosDisponibles = puntos
+                    PuntosDisponibles = puntos ?? 0
                 };
             }
+            
             return new UsuarioJuego { Nombre = "Invitado", Rol = "Ninguno", PuntosDisponibles = 0 };
         }
 
-        [Authorize]
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("NombreUsuario") == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             CargarDatosPanelUsuario();
             return View();
         }
 
-        [Authorize]
         public IActionResult Tienda()
         {
+            if (HttpContext.Session.GetString("NombreUsuario") == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             CargarDatosPanelUsuario();
             var usuario = ObtenerUsuarioLogueado();
             var model = ConstruirTiendaViewModel(usuario);
@@ -88,9 +96,13 @@ namespace PinkPanther.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public IActionResult Comprar(int objetoId)
         {
+            if (HttpContext.Session.GetString("NombreUsuario") == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
             var usuario = ObtenerUsuarioLogueado();
             ObjetoTienda? objeto = CatalogoBase.Find(item => item.Id == objetoId);
 
@@ -193,7 +205,7 @@ namespace PinkPanther.Controllers
         [Route("Login")]
         public IActionResult Login()
         {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            if (HttpContext.Session.GetString("NombreUsuario") != null)
             {
                 return RedirectToAction("Index", "Home");
             }
