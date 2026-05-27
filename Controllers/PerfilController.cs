@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 using PinkPanther.Models;
 using System.Collections.Generic;
 
 namespace PinkPanther.Controllers;
 
-[Authorize]
 [Route("Perfil")]
 public class PerfilController : Controller
 {
@@ -22,6 +21,11 @@ public class PerfilController : Controller
     [HttpGet("")]
     public IActionResult Perfil()
     {
+        if (HttpContext.Session.GetString("NombreUsuario") == null)
+        {
+            return RedirectToAction("Login", "Home");
+        }
+
         PerfilViewModel perfil = new PerfilViewModel();
 
         perfil.Nombre = "Ana García";
@@ -83,6 +87,11 @@ public class PerfilController : Controller
     [HttpPost("GuardarResumen")]
     public IActionResult GuardarResumen(string ResumenProfesional)
     {
+        if (HttpContext.Session.GetString("NombreUsuario") == null)
+        {
+            return RedirectToAction("Login", "Home");
+        }
+
         if (string.IsNullOrWhiteSpace(ResumenProfesional))
         {
             TempData["Error"] = "El resumen profesional es requerido.";
