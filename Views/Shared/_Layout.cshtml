@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -14,7 +15,6 @@
 </head>
 <body>
     @{ 
-        // 1. Extraemos tanto el controlador como la acción actual
         var currentController = ViewContext?.RouteData?.Values?["controller"]?.ToString();
         var currentAction = ViewContext?.RouteData?.Values?["action"]?.ToString();
 
@@ -22,14 +22,13 @@
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
 
-        // 2. Validamos la combinación exacta de Controlador + Acción
         if (currentController == "Home" && currentAction == "Index") { clsIndex += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
         if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
 
-        var puntos = ViewData["PuntosUsuario"]?.ToString() ?? "0";
-        var nombreUsuario = ViewData["NombreUsuario"]?.ToString() ?? "Usuario";
-        var rolUsuario = ViewData["RolUsuario"]?.ToString() ?? "Jugador";
+        var puntos = Context.Session.GetInt32("PuntosUsuario")?.ToString("N0") ?? "0";
+        var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? "Usuario";
+        var rolUsuario = "Jugador";
     }
 
     <header>
@@ -44,7 +43,7 @@
                     <p style="margin: 0; font-size: 14px; color: #666; padding-left: 5px;">Centro de Aprendizaje de IA</p>
                 </a>
      
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                @if (Context.Session.GetString("NombreUsuario") != null)
                 {
                     <div class="menu-superior">
                         <ul class="navbar-nav menu-centrado" style="gap: 20px;">
