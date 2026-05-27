@@ -2,12 +2,22 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PinkPanther.Models;
+using PinkPanther.Services;
+using System.Security.Claims;
 
 namespace PinkPanther.Services
 {
     public class HomeController : Controller
     {
+        // Catalogo Juegos
+        private readonly ICatalogoService _catalogoService;
 
+        public HomeController(ICatalogoService catalogoService)
+        {
+            _catalogoService = catalogoService;
+        }        
+
+        // Tienda
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
         {
             new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
@@ -23,6 +33,7 @@ namespace PinkPanther.Services
         private static List<int> ObjetosAdquiridos = new List<int> { 3 };
         private static int? ObjetoEquipadoId = 6;
 
+        // Login
         private UsuarioJuego ObtenerUsuarioLogueado()
         {
             var nombre = HttpContext.Session.GetString("NombreUsuario");
@@ -62,6 +73,24 @@ namespace PinkPanther.Services
             CargarDatosPanelUsuario();
             var usuario = ObtenerUsuarioLogueado();
             var model = ConstruirTiendaViewModel(usuario);
+            return View(model);
+        }
+        
+        [Authorize]
+        public async Task<IActionResult> Catalogo(string dificultad)
+        {
+            CargarDatosPanelUsuario();
+
+            var juegos = string.IsNullOrEmpty(dificultad)
+                ? await _catalogoService.ObtenerJuegosAsync()
+                : await _catalogoService.ObtenerJuegosPorDificultadAsync(dificultad);
+
+            var model = new CatalogoJuegosViewModel
+            {
+                Juegos = juegos,
+                DificultadSeleccionada = dificultad
+            };
+
             return View(model);
         }
 
