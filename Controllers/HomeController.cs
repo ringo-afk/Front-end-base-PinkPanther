@@ -5,7 +5,7 @@ using PinkPanther.Models;
 using PinkPanther.Services;
 using System.Security.Claims;
 
-namespace PinkPanther.Controllers
+namespace PinkPanther.Services
 {
     public class HomeController : Controller
     {
@@ -128,7 +128,6 @@ namespace PinkPanther.Controllers
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
         }
-
         private void CargarDatosPanelUsuario()
         {
             var usuario = ObtenerUsuarioLogueado();
@@ -211,6 +210,19 @@ namespace PinkPanther.Controllers
             }
             
             return View("~/Views/Home/Login.cshtml");
+        }
+        private readonly IUsuarioService _usuarioService;
+
+        public HomeController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
+
+        public async Task<IActionResult> TablaClasificatoria()
+        {
+            var usuarios =
+                await _usuarioService.ObtenerUsuarios();
+            return View(usuarios);
         }
     }
 }

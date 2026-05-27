@@ -10,6 +10,22 @@ builder.Services.AddHttpClient("PythonApi")
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.LogoutPath = "/api/auth/logout";
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+    });
+builder.Services.AddHttpClient<IUsuarioService, UsuarioService>()
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        return new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+    });
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromDays(1);

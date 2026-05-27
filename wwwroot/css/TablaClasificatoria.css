@@ -1,0 +1,397 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+    color: #002f6c;
+}
+
+.container {
+    width: 1200px;
+    margin: auto;
+    padding: 50px 0;
+}
+
+.title {
+    text-align: center;
+    font-size: 52px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.search-box {
+    width: 500px;
+    margin: auto;
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 18px 20px 18px 55px;
+    border-radius: 40px;
+    border: 2px solid #ddd;
+    font-size: 17px;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    display: flex;
+    align-items: center;
+}
+
+.top-three {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.card {
+    width: 350px;
+    background: white;
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.gold {
+    border: 4px solid #e0b000;
+}
+
+.silver {
+    border: 4px solid #a8a8a8;
+}
+
+.bronze {
+    border: 4px solid #e07a00;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #dfe8f5;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.name {
+    font-size: 28px;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 15px;
+    background: #dfe8f5;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.stats {
+    margin-top: 25px;
+}
+
+.box {
+    padding: 18px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+.km {
+    background: #dfe8f5;
+}
+
+.token {
+    background: #f4e7bf;
+    color: #d5a100;
+}
+
+.label {
+    color: #666;
+}
+
+.value {
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.section-title {
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.your-position {
+    background: white;
+    border: 4px solid #e0b000;
+    border-radius: 24px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-side {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.rank {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #002f6c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.small-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #dfe8f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.right-side {
+    display: flex;
+    gap: 20px;
+}
+
+.mini-box {
+    padding: 15px 30px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* RANKING LIST */
+
+.ranking-list{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.ranking-item{
+    background: white;
+    border-radius: 18px;
+    padding: 20px 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,.05);
+}
+
+.ranking-left{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.ranking-number{
+    font-size: 24px;
+    font-weight: 700;
+    color: #002f6c;
+    width: 50px;
+}
+
+.small-avatar{
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+    background: #dfe8f5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.ranking-name{
+    font-size: 20px;
+    font-weight: 600;
+    color: #002f6c;
+}
+
+.ranking-department{
+    color: #666;
+    margin-top: 4px;
+}
+
+.ranking-km{
+    font-size: 22px;
+    font-weight: 700;
+    color: #e0b000;
+}
+
+.position{
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.top-three {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 50px;
+}
+
+/* Tarjetas base */
+.top-three .card {
+    width: 330px;
+}
+
+/* ORDEN VISUAL */
+.top-three .card.gold {
+    order: 2;          /* el 1 (oro) al centro */
+    transform: scale(1.15);
+    z-index: 3;
+}
+
+.top-three .card.silver {
+    order: 1;          /* izquierda */
+    transform: scale(1.05) translateY(20px) translateX(-5px);
+}
+
+.top-three .card.bronze {
+    order: 3;          /* derecha */
+    transform: translateY(30px) translateX(-5px);
+}
+
+.usuario-actual-card{
+    width: 100%;
+    background: white;
+    border: 4px solid #e0b000;
+    border-radius: 24px;
+    padding: 25px 30px;
+    margin: 35px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    transition: .25s ease;
+}
+
+.usuario-actual-card:hover{
+    transform: translateY(-2px);
+}
+
+.titulo-usuario{
+    font-size: 14px;
+    font-weight: 700;
+    color: #e0b000;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.contenido-usuario{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.usuario-nombre{
+    font-size: 30px;
+    font-weight: 700;
+    color: #002f6c;
+}
+
+.usuario-departamento{
+    padding: 8px 16px;
+    background: #dfe8f5;
+    border-radius: 20px;
+    font-size: 15px;
+    color: #002f6c;
+    font-weight: 500;
+}
+
+.usuario-km{
+    font-size: 28px;
+    font-weight: 700;
+    color: #e0b000;
+}
