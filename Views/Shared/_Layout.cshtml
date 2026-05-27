@@ -21,10 +21,12 @@
         var clsCatalogo = "nav-link text-dark";
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
+        var clsLeaderboard = "nav-link text-dark";
 
         if (currentController == "Home" && currentAction == "Catalogo") { clsCatalogo += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
         if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
+        if (currentController == "Home" && currentAction == "TablaClasificatoria") { clsLeaderboard += " nav-link-activo"; }
 
         var puntos = Context.Session.GetInt32("PuntosUsuario")?.ToString("N0") ?? "0";
         var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? "Usuario";
@@ -52,6 +54,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="@clsTienda" asp-area="" asp-controller="Home" asp-action="Tienda">🛒 Tienda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="@clsLeaderboard" asp-area="" asp-controller="Home" asp-action="TablaClasificatoria">🏆 Leaderboard</a>
                             </li>
                             <li class="nav-item">
                                 <a class="@clsPrivacy" asp-area="" asp-controller="Perfil" asp-action="Perfil">👤 Mi Perfil</a>
