@@ -1,0 +1,224 @@
+.catalogo-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.catalogo-header {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.catalogo-titulo {
+    color: #1d3557;
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.catalogo-descripcion {
+    max-width: 850px;
+    margin: 0 auto 35px auto;
+    color: #4b5563;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.btn-programa {
+    background-color: #f2c94c;
+    color: #1d3557;
+    padding: 14px 34px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,.15);
+    transition: .2s;
+}
+
+.btn-programa:hover {
+    background-color: #e6bb3d;
+    color: #1d3557;
+}
+
+.filtros-container {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 40px;
+}
+
+.btn-filtro {
+    border: 1px solid #1d3557;
+    color: #1d3557;
+    padding: 10px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    background-color: white;
+    transition: .2s;
+}
+
+.btn-filtro:hover {
+    background-color: #1d3557;
+    color: white;
+}
+
+.btn-filtro.activo {
+    background-color: #1d3557;
+    color: white;
+}
+
+.juego-card {
+    display: flex;
+    overflow: hidden;
+    border-radius: 18px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    margin-bottom: 30px;
+}
+
+.juego-lateral {
+    width: 34%;
+    background-color: #eef1f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.juego-lateral.intermedio {
+    background-color: #fff9ec;
+}
+
+.circulo-imagen {
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    background-color: #1d3557;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 22px;
+    overflow: hidden;
+}
+
+.juego-lateral.intermedio .circulo-imagen {
+    background-color: #f2c94c;
+}
+
+.imagen-juego {
+    width: 82px;
+    height: 82px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+.titulo-juego {
+    color: #1d3557;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.badge-dificultad {
+    background-color: #f7f0d5;
+    border: 1px solid #e4d28a;
+    color: #1d3557;
+    padding: 7px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.duracion-juego {
+    color: #4b5563;
+    font-size: 17px;
+}
+
+.juego-info {
+    width: 66%;
+    padding: 45px 50px;
+}
+
+.descripcion-juego {
+    font-size: 19px;
+    color: #1f2937;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.titulo-objetivos {
+    color: #1d3557;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.objetivo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+    color: #374151;
+    font-size: 17px;
+}
+
+.check-circle {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #f2c94c;
+    color: #f2c94c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.catalogo-cta {
+    background-color: #1d3557;
+    color: white;
+    text-align: center;
+    padding: 60px 30px;
+    border-radius: 18px;
+    margin-top: 55px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.catalogo-cta h3 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.catalogo-cta p {
+    max-width: 700px;
+    margin: 0 auto 35px auto;
+    line-height: 1.7;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+
+    .catalogo-titulo {
+        font-size: 36px;
+    }
+
+    .juego-card {
+        flex-direction: column;
+    }
+
+    .juego-lateral,
+    .juego-info {
+        width: 100%;
+    }
+
+    .filtros-container {
+        flex-wrap: wrap;
+    }
+}

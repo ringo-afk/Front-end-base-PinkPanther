@@ -1,0 +1,148 @@
+@model PinkPanther.Models.CatalogoJuegosViewModel
+
+@{
+    ViewData["Title"] = "Catálogo de Juegos";
+
+    var dificultad = Model.DificultadSeleccionada ?? "";
+
+    var claseTodos = string.IsNullOrEmpty(dificultad)
+        ? "btn-filtro activo"
+        : "btn-filtro";
+
+    var clasePrincipiante = dificultad == "Principiante"
+        ? "btn-filtro activo"
+        : "btn-filtro";
+
+    var claseIntermedio = dificultad == "Intermedio"
+        ? "btn-filtro activo"
+        : "btn-filtro";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/catalogo.css"
+          asp-append-version="true" />
+}
+
+<div class="catalogo-wrapper">
+
+    <div class="catalogo-header">
+
+        <h1 class="catalogo-titulo">
+            Catálogo de Juegos de Prompt Learning
+        </h1>
+
+        <p class="catalogo-descripcion">
+            Explora nuestros juegos educativos diseñados para mejorar tus habilidades de comunicación con IA.
+            Cada juego está diseñado para enseñarte técnicas específicas y prácticas del prompt engineering.
+        </p>
+
+        <a href="#" class="btn-programa">
+            ▷ Ir al Programa de Juegos
+        </a>
+
+    </div>
+
+    <div class="filtros-container">
+
+        <a asp-action="Catalogo"
+           class="@claseTodos">
+            Todos
+        </a>
+
+        <a asp-action="Catalogo"
+           asp-route-dificultad="Principiante"
+           class="@clasePrincipiante">
+            Principiante
+        </a>
+
+        <a asp-action="Catalogo"
+           asp-route-dificultad="Intermedio"
+           class="@claseIntermedio">
+            Intermedio
+        </a>
+
+    </div>
+
+    @foreach (var juego in Model.Juegos)
+    {
+        var objetivos = juego.Objetivos.Split('|');
+
+        var claseLado = juego.Dificultad == "Intermedio"
+            ? "juego-lateral intermedio"
+            : "juego-lateral";
+
+        <div class="juego-card">
+
+            <div class="@claseLado">
+
+                <div class="circulo-imagen">
+
+                    <img src="@juego.LinkImagen"
+                         class="imagen-juego"
+                         alt="@juego.NombreJuego" />
+
+                </div>
+
+                <h2 class="titulo-juego">
+                    @juego.NombreJuego
+                </h2>
+
+                <div class="badge-dificultad">
+                    @juego.Dificultad
+                </div>
+
+                <div class="duracion-juego">
+                    🕘 @juego.Duracion
+                </div>
+
+            </div>
+
+            <div class="juego-info">
+
+                <p class="descripcion-juego">
+                    @juego.Descripcion
+                </p>
+
+                <h4 class="titulo-objetivos">
+                    Objetivos de Aprendizaje:
+                </h4>
+
+                @foreach (var objetivo in objetivos)
+                {
+                    <div class="objetivo-item">
+
+                        <span class="check-circle">
+                            ✓
+                        </span>
+
+                        <span>
+                            @objetivo
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    }
+
+    <div class="catalogo-cta">
+
+        <h3>
+            ¿Listo para empezar tu aprendizaje?
+        </h3>
+
+        <p>
+            Accede al programa completo y comienza a dominar el arte del prompt engineering
+            con ejercicios prácticos y desafíos interactivos.
+        </p>
+
+        <a href="#" class="btn-programa">
+            ▷ Comenzar Ahora
+        </a>
+
+    </div>
+
+</div>

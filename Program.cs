@@ -17,6 +17,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// API para catalogo de juegos
+builder.Services.AddHttpClient("CatalogoApi")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
