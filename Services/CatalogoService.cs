@@ -14,7 +14,7 @@ public class CatalogoService : ICatalogoService
     public async Task<List<Juego>> ObtenerJuegosAsync()
     {
         var client = _httpClientFactory.CreateClient("CatalogoApi");
-        var url = "https://127.0.0.1:8000/juegos";
+        var url = "https://127.0.0.1:8001/juegos";
 
         var response = await client.GetAsync(url);
 
