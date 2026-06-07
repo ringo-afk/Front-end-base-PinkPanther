@@ -251,8 +251,15 @@ namespace PinkPanther.Controllers
 
         public async Task<IActionResult> TablaClasificatoria()
         {
-            var usuarios = await _usuarioService.ObtenerUsuarios();
-            return View(usuarios);
+            try
+            {
+                var usuarios = await _usuarioService.ObtenerUsuarios();
+                return View(usuarios);
+            }
+            catch
+            {
+                return View(new List<Usuario>());
+            }
         }
     }
 }
