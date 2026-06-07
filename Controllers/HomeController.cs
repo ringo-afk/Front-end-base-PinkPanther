@@ -227,7 +227,6 @@ namespace PinkPanther.Controllers
 
         [HttpPost]
         [Route("Login")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
