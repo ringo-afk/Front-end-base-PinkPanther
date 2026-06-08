@@ -46,20 +46,15 @@ body {
     height: 35px;
     background-color: #1a365d;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
 }
 
-/* Main Content */
 .main-container {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    min-height: 70vh;
+    padding-bottom: 80px;
 }
 
 .header-text {
@@ -112,6 +107,20 @@ body {
     box-shadow: 0 0 0 2px rgba(253, 193, 52, 0.2);
 }
 
+.validation-summary {
+    color: #dc2626;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.validation-error {
+    color: #dc2626;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -120,6 +129,11 @@ body {
 
 .checkbox-group input {
     margin-right: 8px;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-weight: normal;
 }
 
 .btn-submit {
@@ -131,29 +145,9 @@ body {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .btn-submit:hover {
-    background-color: #e5b030;
-}
-
-.error-message {
-    color: #dc2626;
-    font-size: 12px;
-    margin-top: 5px;
-    display: none;
-}
-
-.footer {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-size: 14px;
-}
-
-.footer a {
-    color: #1a365d;
-    font-weight: bold;
-    text-decoration: none;
+    background-color: #e5b030; 
 }

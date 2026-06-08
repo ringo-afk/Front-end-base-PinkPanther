@@ -7,47 +7,49 @@
     <link rel="stylesheet" href="~/css/login.css" />
 }
 
-<main class="main-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 70vh;">
-    <div class="header-text" style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #1a365d;">Bienvenido al Learning Hub</h2>
-        <p style="color: #666;">Inicia sesión para acceder al Centro de Aprendizaje de IA</p>
+<main class="main-container">
+    <div class="header-text">
+        <h2>Bienvenido al Learning Hub</h2>
+        <p>Inicia sesión para acceder al Centro de Aprendizaje de IA</p>
     </div>
 
-    <div class="login-card" style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; max-width: 400px;">
+    <div class="login-card">
         
         <form asp-controller="Home" asp-action="Login" method="post">
             
-            <div asp-validation-summary="ModelOnly" style="color: #dc2626; margin-bottom: 15px; font-size: 14px; text-align: center;"></div>
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label asp-for="Email" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Correo electrónico</label>
+            <div class="form-group">
+                <label asp-for="Email">Correo electrónico</label>
                 <input asp-for="Email" class="form-control" placeholder="tu.email@whirlpool.com" />
-                <span asp-validation-for="Email" style="color: #dc2626; font-size: 12px; display: block; margin-top: 5px;"></span>
+                <span asp-validation-for="Email" class="validation-error"></span>
             </div>
 
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label asp-for="Password" style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">Contraseña</label>
+            <div class="form-group">
+                <label asp-for="Password">Contraseña</label>
                 <input asp-for="Password" class="form-control" placeholder="********" type="password" />
-                <span asp-validation-for="Password" style="color: #dc2626; font-size: 12px; display: block; margin-top: 5px;"></span>
+                <span asp-validation-for="Password" class="validation-error"></span>
             </div>
 
-            <div class="checkbox-group" style="display: flex; align-items: center; margin-bottom: 25px;">
-                <input asp-for="RememberMe" style="margin-right: 8px;" />
-                <label asp-for="RememberMe" style="margin:0; font-weight:normal;">Recordarme</label>
+            <div class="checkbox-group">
+                <input asp-for="RememberMe" />
+                <label asp-for="RememberMe">Recordarme</label>
             </div>
 
-            <button type="submit" class="btn-submit" style="width: 100%; padding: 12px; background-color: #f6c042; color: #333; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+            <button type="submit" class="btn-submit">
                 Iniciar Sesión
             </button>
         </form>
 
     </div>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 </main>
 
 @section Scripts {
