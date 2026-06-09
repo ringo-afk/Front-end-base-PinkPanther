@@ -3,6 +3,12 @@ using PinkPanther.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient<IPerfilService, PerfilService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
 builder.Services.AddHttpClient("PythonApi")
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {

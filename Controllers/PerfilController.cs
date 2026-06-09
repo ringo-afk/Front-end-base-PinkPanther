@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using PinkPanther.Models;
+using PinkPanther.Services;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace PinkPanther.Controllers;
 
@@ -10,74 +13,56 @@ namespace PinkPanther.Controllers;
 public class PerfilController : Controller
 {
     private static string resumenGuardado = "Profesional con experiencia en la gestion de proyectos y coordinacion de equipos.";
+    private static string rutaFotoGuardada = null;
 
     private readonly ILogger<PerfilController> _logger;
+    private readonly IWebHostEnvironment _env;
+    private readonly IPerfilService _perfilService;
 
-    public PerfilController(ILogger<PerfilController> logger)
+    public PerfilController(
+        ILogger<PerfilController> logger,
+        IWebHostEnvironment env,
+        IPerfilService perfilService)
     {
         _logger = logger;
+        _env = env;
+        _perfilService = perfilService;
     }
 
     [HttpGet("")]
-    public IActionResult Perfil()
+    public async Task<IActionResult> Perfil()
     {
         if (HttpContext.Session.GetString("NombreUsuario") == null)
         {
             return RedirectToAction("Login", "Home");
         }
 
-        PerfilViewModel perfil = new PerfilViewModel();
+        int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
 
-        perfil.Nombre = "Ana García";
-        perfil.Puesto = "Gerente Senior de Proyectos";
-        perfil.Nivel = "Level 18 - Experto";
-        perfil.PuntosDigitales = 3500;
+        PerfilViewModel perfil = await _perfilService.ObtenerPerfil(idUsuario);
 
-        perfil.Departamento = "Operaciones";
-        perfil.Ubicacion = "Monterrey";
-
-        perfil.ResumenProfesional = resumenGuardado;
-
-        perfil.Logros = new List<Logro>()
+        if (perfil == null)
         {
-            new Logro
-            {
-                Icono = "star",
-                Titulo = "Mejor Desempeño",
-                Descripcion = "Supera tus objetivos de ventas por 3 meses consecutivos"
-            },
-            new Logro
-            {
-                Icono = "shield",
-                Titulo = "Solucionador de Problemas",
-                Descripcion = "Resuelve 100 casos de clientes con 95% de satisfaccion"
-            }
-        };
+            perfil = new PerfilViewModel();
 
-        perfil.ArticulosVirtuales = new List<ArticuloVirtual>()
-        {
-            new ArticuloVirtual
-            {
-                Icono = "gift",
-                Nombre = "Paquete de Puntos Bonus",
-                Rareza = "Ultra Raro",
-                EsUltraRaro = true
-            },
-            new ArticuloVirtual
-            {
-                Icono = "shirt",
-                Nombre = "Camiseta Virtual",
-                Rareza = "Raro",
-                EsUltraRaro = false
-            }
-        };
+            perfil.Nombre = "Usuario no encontrado";
+            perfil.Puesto = "Sin puesto";
+            perfil.Nivel = "Sin nivel";
+            perfil.PuntosDigitales = 0;
+            perfil.Departamento = "Sin departamento";
+            perfil.Ubicacion = "Sin ubicacion";
+            perfil.ResumenProfesional = resumenGuardado;
+            perfil.RutaFotoPerfil = rutaFotoGuardada;
 
-        perfil.Habilidades = new List<Habilidad>()
+            perfil.Logros = new List<Logro>();
+            perfil.ArticulosVirtuales = new List<ArticuloVirtual>();
+            perfil.Habilidades = new List<Habilidad>();
+        }
+        else
         {
-            new Habilidad { Nombre = "Liderazgo" },
-            new Habilidad { Nombre = "Gestión" },
-            new Habilidad { Nombre = "Resolución" }
-        };
+            perfil.ResumenProfesional = resumenGuardado;
+            perfil.RutaFotoPerfil = rutaFotoGuardada;
+        }
 
         ViewBag.NombreUsuario = perfil.Nombre;
 
@@ -104,6 +89,55 @@ public class PerfilController : Controller
         {
             resumenGuardado = ResumenProfesional;
             TempData["Mensaje"] = "Resumen profesional guardado correctamente.";
+        }
+
+        TempData["AbrirModal"] = "true";
+
+        return RedirectToAction("Perfil");
+    }
+
+    [HttpPost("GuardarFoto")]
+    public async Task<IActionResult> GuardarFoto(PerfilViewModel perfil)
+    {
+        if (HttpContext.Session.GetString("NombreUsuario") == null)
+        {
+            return RedirectToAction("Login", "Home");
+        }
+
+        if (perfil.FotoPerfil != null && perfil.FotoPerfil.Length > 0)
+        {
+            var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = Path.GetExtension(perfil.FotoPerfil.FileName).ToLower();
+
+            if (!extensionesPermitidas.Contains(extension))
+            {
+                TempData["ErrorFoto"] = "Solo se permiten imagenes jpg, jpeg, png o gif.";
+            }
+            else
+            {
+                string carpeta = Path.Combine(_env.WebRootPath, "Imagenes/fotosperfil");
+
+                if (!Directory.Exists(carpeta))
+                {
+                    Directory.CreateDirectory(carpeta);
+                }
+
+                string nombreArchivo = Guid.NewGuid().ToString() + "_FotoPerfil" + extension;
+                string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
+
+                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                {
+                    await perfil.FotoPerfil.CopyToAsync(stream);
+                }
+
+                rutaFotoGuardada = "/Imagenes/fotosperfil/" + nombreArchivo;
+
+                TempData["MensajeFoto"] = "Foto de perfil guardada correctamente.";
+            }
+        }
+        else
+        {
+            TempData["ErrorFoto"] = "Selecciona una foto primero.";
         }
 
         TempData["AbrirModal"] = "true";
