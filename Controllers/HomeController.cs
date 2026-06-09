@@ -34,10 +34,8 @@ namespace PinkPanther.Controllers
             _catalogoService = catalogoService;
         }
 
-        // --- MANEJO DE SESIÓN CORREGIDO ---
         private UsuarioJuego ObtenerUsuarioActual()
         {
-            // Leemos los datos reales que el Login guardó en la sesión
             var nombre = HttpContext.Session.GetString("NombreUsuario");
             var puntos = HttpContext.Session.GetInt32("PuntosUsuario");
 
@@ -50,7 +48,6 @@ namespace PinkPanther.Controllers
                     PuntosDisponibles = puntos ?? 0 
                 };
             }
-            // Si no hay nombre, regresamos null para forzar el login
             return null;
         }
 
@@ -81,8 +78,6 @@ namespace PinkPanther.Controllers
                 ViewData["PuntosUsuario"] = usuarioActual.PuntosDisponibles.ToString("N0");
             }
         }
-
-        // --- PANTALLAS (CON CANDADOS DE SEGURIDAD) ---
 
         public IActionResult Index()
         {
@@ -172,7 +167,6 @@ namespace PinkPanther.Controllers
                 return RedirectToAction("Tienda");
             }
 
-            // Descontamos puntos y guardamos en sesión para que la barra de navegación se actualice
             usuarioActual.PuntosDisponibles -= objeto.CostoPuntos;
             HttpContext.Session.SetInt32("PuntosUsuario", usuarioActual.PuntosDisponibles);
 
@@ -183,7 +177,6 @@ namespace PinkPanther.Controllers
             return RedirectToAction(nameof(Tienda));
         }
 
-        // --- SISTEMA DE LOGIN ---
 
         [HttpGet]
         [Route("Login")]
@@ -220,8 +213,6 @@ namespace PinkPanther.Controllers
             
             return View("~/Views/Home/Login.cshtml", model);
         }
-
-        // --- UTILERÍAS ---
 
         private TiendaViewModel ConstruirTiendaViewModel()
         {
