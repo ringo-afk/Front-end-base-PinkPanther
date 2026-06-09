@@ -30,7 +30,6 @@ namespace PinkPanther.Services
         {
             var client = _httpClientFactory.CreateClient("PythonApi");
             
-            // AQUÍ ESTÁ LA CORRECCIÓN: Se agregó "api/login" al final de la URL
             var pythonApiUrl = "https://10.14.255.40:8000/api/login";
 
             var payload = new { email, password };
