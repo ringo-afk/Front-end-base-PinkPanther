@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    }
+}
 
 <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -84,7 +84,20 @@
             </div>
         </div>
     }
+        
+    @{
+        int idUsuario = Context.Session.GetInt32("IdUsuario") ?? 0;
+        
+        string jsonParam = "{\"ds0.IDUsuario\":" + idUsuario + "}";
+        
+        string urlParam = Uri.EscapeDataString(jsonParam);
+        
+        string urlDashboard = "https://datastudio.google.com/embed/reporting/b8b15c4e-6b63-4b06-8998-d90199930095/page/3CY0F?params=" + urlParam;
+    }
 
+    <div class="dashboard-wrapper" style="margin: 40px 0; display: flex; justify-content: center;">
+        <iframe width="100%" height="600" src="@urlDashboard" frameborder="0" style="border:0; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 1000px;" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+    </div>
     <div class="ranking-list">
         @for (int i = 3; i < Model.Count; i++)
         {
