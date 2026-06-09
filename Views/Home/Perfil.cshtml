@@ -8,7 +8,14 @@
             <div class="col-md-6 perfil-left">
 
                 <div class="foto-perfil-box">
-                    <img id="fotoPerfil" src="~/Imagenes/user-icon.png" class="perfil-img" />
+                    @if (Model.RutaFotoPerfil != null)
+                    {
+                        <img id="fotoPerfil" src="@Model.RutaFotoPerfil" class="perfil-img" />
+                    }
+                    else
+                    {
+                        <img id="fotoPerfil" src="~/Imagenes/user-icon.png" class="perfil-img" />
+                    }
                 </div>
 
                 <div>
@@ -113,7 +120,14 @@
                 </button>
 
                 <div class="perfil-modal-header">
-                    <img src="~/Imagenes/user-icon.png" class="perfil-img-modal" />
+                    @if (Model.RutaFotoPerfil != null)
+                    {
+                        <img src="@Model.RutaFotoPerfil" class="perfil-img-modal" />
+                    }
+                    else
+                    {
+                        <img src="~/Imagenes/user-icon.png" class="perfil-img-modal" />
+                    }
 
                     <div>
                         <h2 class="perfil-nombre-modal">
@@ -144,6 +158,34 @@
                     <div class="info-label">Ubicación:</div>
                     <div>@Model.Ubicacion</div>
                 </div>
+
+                <h3 class="modal-titulo mt-4">
+                    Foto de Perfil
+                </h3>
+
+                <form asp-controller="Perfil" asp-action="GuardarFoto" method="post" enctype="multipart/form-data">
+                    <input type="file" asp-for="FotoPerfil" class="form-control" />
+
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-canjear">
+                            Guardar foto
+                        </button>
+                    </div>
+                </form>
+
+                @if (TempData["MensajeFoto"] != null)
+                {
+                    <div class="alert alert-success text-center mt-3">
+                        @TempData["MensajeFoto"]
+                    </div>
+                }
+
+                @if (TempData["ErrorFoto"] != null)
+                {
+                    <div class="alert alert-danger text-center mt-3">
+                        @TempData["ErrorFoto"]
+                    </div>
+                }
 
                 <form asp-controller="Perfil" asp-action="GuardarResumen" method="post">
                 @if (TempData["Mensaje"] != null)
@@ -214,12 +256,10 @@
 
                 <div class="mt-4">
 
-                    <a asp-controller="Tienda"
-                       asp-action="Index"
-                       class="btn btn-canjear">
-
-                        Si
-
+                    <a asp-controller="Home"
+                        asp-action="Tienda"
+                        class="btn btn-canjear">
+                        Sí
                     </a>
 
                     <button class="btn btn-cancelar"

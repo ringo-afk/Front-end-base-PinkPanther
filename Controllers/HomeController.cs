@@ -35,7 +35,9 @@ namespace PinkPanther.Services
         private static List<int> ObjetosAdquiridos = new List<int> { 3 };
         private static int? ObjetoEquipadoId = 6;
 
-        private UsuarioJuego ObtenerUsuarioLogueado()
+
+        
+        private UsuarioJuego ObtenerUsuarioActual()
         {
             var nombre = HttpContext.Session.GetString("NombreUsuario");
             var puntos = HttpContext.Session.GetInt32("PuntosUsuario");
@@ -227,6 +229,7 @@ namespace PinkPanther.Services
 
             if (resultadoLogin != null && resultadoLogin.Success)
             {
+                HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
                 HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
                 HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
                 

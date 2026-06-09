@@ -17,6 +17,12 @@ builder.Services.AddHttpClient("CatalogoApi")
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 
+builder.Services.AddHttpClient<IPerfilService, PerfilService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
 builder.Services.AddHttpClient<IUsuarioService, UsuarioService>()
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {
@@ -49,8 +55,14 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthorization();
 
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Login");
+    return Task.CompletedTask;
+});
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Login}/{id?}");
 
 app.Run();
