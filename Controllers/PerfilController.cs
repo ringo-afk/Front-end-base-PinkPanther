@@ -9,6 +9,8 @@ using System.IO;
 
 namespace PinkPanther.Controllers;
 
+//Prueba
+
 [Route("Perfil")]
 public class PerfilController : Controller
 {
