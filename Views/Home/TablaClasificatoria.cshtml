@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding
 @model List<PinkPanther.Models.Usuario>
 
 @{
@@ -59,12 +60,20 @@
     @{
         var usuarioActual = Context.Session.GetString("NombreUsuario");
         var usuarioLogueado = Model.FirstOrDefault(u => u.NombreUsuario == usuarioActual);
+
+        int posicionUsuario = -1;
+
+        if (usuarioLogueado != null)
+        {
+            posicionUsuario = Model.FindIndex(u => u.NombreUsuario == usuarioActual) + 1;
+        }
     }
+    
 
     @if (usuarioLogueado != null)
     {
         <div class="usuario-actual-card">
-            <div class="titulo-usuario">TU POSICIÓN: 3</div>
+            <div class="titulo-usuario">TU POSICIÓN: @posicionUsuario</div>
             <div class="contenido-usuario">
                 <span class="usuario-nombre">@usuarioLogueado.NombreUsuario</span>
                 <span class="usuario-departamento">@usuarioLogueado.NombreDepartamento</span>
