@@ -29,7 +29,9 @@ namespace PinkPanther.Services
         public async Task<PythonApiResponse?> AuthenticateAsync(string email, string password)
         {
             var client = _httpClientFactory.CreateClient("PythonApi");
-            var pythonApiUrl = "https://127.0.0.1:8000/api/login";
+            
+            // AQUÍ ESTÁ LA CORRECCIÓN: Se agregó "api/login" al final de la URL
+            var pythonApiUrl = "https://10.14.255.40:8000/api/login";
 
             var payload = new { email, password };
             var jsonContent = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
@@ -38,7 +40,16 @@ namespace PinkPanther.Services
             
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                try 
+                {
+                    var errorResponse = await response.Content.ReadFromJsonAsync<PythonApiResponse>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return errorResponse;
+                }
+                catch
+                {
+                    return null;
+                }
             }
 
             return await response.Content.ReadFromJsonAsync<PythonApiResponse>(

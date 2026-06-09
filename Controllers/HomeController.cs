@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PinkPanther.Models;
 using PinkPanther.Services;
-using System.Security.Claims;
 using System.Text.Json;
 
 namespace PinkPanther.Controllers
 {
     public class HomeController : Controller
     {
-        
         private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
         {
             new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
@@ -25,35 +23,42 @@ namespace PinkPanther.Controllers
 
         private static int? ObjetoEquipadoId = 6; 
 
-        
+        private readonly IAuthService _authService;
+        private readonly IUsuarioService _usuarioService;
+        private readonly ICatalogoService _catalogoService;
 
-        
+        public HomeController(IAuthService authService, IUsuarioService usuarioService, ICatalogoService catalogoService)
+        {
+            _authService = authService;
+            _usuarioService = usuarioService;
+            _catalogoService = catalogoService;
+        }
+
+        // --- MANEJO DE SESIÓN CORREGIDO ---
         private UsuarioJuego ObtenerUsuarioActual()
         {
-            var userJson = HttpContext.Session.GetString("UsuarioActual");
-            if (string.IsNullOrEmpty(userJson))
+            // Leemos los datos reales que el Login guardó en la sesión
+            var nombre = HttpContext.Session.GetString("NombreUsuario");
+            var puntos = HttpContext.Session.GetInt32("PuntosUsuario");
+
+            if (!string.IsNullOrEmpty(nombre))
             {
-                
-                var nuevoUsuario = new UsuarioJuego { Nombre = "Ana García", Rol = "Jugador", PuntosDisponibles = 5000 };
-                GuardarUsuarioActual(nuevoUsuario);
-                return nuevoUsuario;
+                return new UsuarioJuego 
+                { 
+                    Nombre = nombre, 
+                    Rol = "Jugador", 
+                    PuntosDisponibles = puntos ?? 0 
+                };
             }
-            return JsonSerializer.Deserialize<UsuarioJuego>(userJson)!;
+            // Si no hay nombre, regresamos null para forzar el login
+            return null;
         }
 
-        
-        private void GuardarUsuarioActual(UsuarioJuego usuario)
-        {
-            HttpContext.Session.SetString("UsuarioActual", JsonSerializer.Serialize(usuario));
-        }
-
-        
         private List<int> ObtenerObjetosAdquiridos()
         {
             var adquiridosJson = HttpContext.Session.GetString("ObjetosAdquiridos");
             if (string.IsNullOrEmpty(adquiridosJson))
             {
-                
                 var adquiridos = new List<int> { 3 };
                 GuardarObjetosAdquiridos(adquiridos);
                 return adquiridos;
@@ -61,37 +66,90 @@ namespace PinkPanther.Controllers
             return JsonSerializer.Deserialize<List<int>>(adquiridosJson)!;
         }
 
-        
         private void GuardarObjetosAdquiridos(List<int> adquiridos)
         {
             HttpContext.Session.SetString("ObjetosAdquiridos", JsonSerializer.Serialize(adquiridos));
         }
 
-        
+        private void CargarDatosPanelUsuario()
+        {
+            var usuarioActual = ObtenerUsuarioActual();
+            if(usuarioActual != null)
+            {
+                ViewData["NombreUsuario"] = usuarioActual.Nombre;
+                ViewData["RolUsuario"] = usuarioActual.Rol;
+                ViewData["PuntosUsuario"] = usuarioActual.PuntosDisponibles.ToString("N0");
+            }
+        }
+
+        // --- PANTALLAS (CON CANDADOS DE SEGURIDAD) ---
 
         public IActionResult Index()
         {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
             CargarDatosPanelUsuario();
             return View();
         }
 
         public IActionResult Privacy()
         {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
             CargarDatosPanelUsuario();
             return View();
         }
 
+        public async Task<IActionResult> Catalogo(string dificultad)
+        {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
+            CargarDatosPanelUsuario();
+
+            var juegos = string.IsNullOrEmpty(dificultad)
+                ? await _catalogoService.ObtenerJuegosAsync()
+                : await _catalogoService.ObtenerJuegosPorDificultadAsync(dificultad);
+
+            var model = new CatalogoJuegosViewModel
+            {
+                Juegos = juegos,
+                DificultadSeleccionada = dificultad
+            };
+
+            return View(model);
+        }
+
         public IActionResult Tienda()
         {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
             CargarDatosPanelUsuario();
             var model = ConstruirTiendaViewModel();
             return View(model);
+        }
+
+        public async Task<IActionResult> TablaClasificatoria()
+        {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
+            try
+            {
+                var usuarios = await _usuarioService.ObtenerUsuarios();
+                return View(usuarios);
+            }
+            catch
+            {
+                return View(new List<Usuario>());
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Comprar(int objetoId)
         {
+            var usuarioActual = ObtenerUsuarioActual();
+            if (usuarioActual == null) return RedirectToAction("Login", "Home");
+
             ObjetoTienda? objeto = CatalogoBase.Find(item => item.Id == objetoId);
 
             if (objeto == null)
@@ -100,9 +158,7 @@ namespace PinkPanther.Controllers
                 return RedirectToAction("Tienda");
             }
 
-            
             var objetosAdquiridos = ObtenerObjetosAdquiridos();
-            var usuarioActual = ObtenerUsuarioActual();
 
             if (objetosAdquiridos.Contains(objeto.Id) || ObjetoEquipadoId == objeto.Id)
             {
@@ -116,24 +172,56 @@ namespace PinkPanther.Controllers
                 return RedirectToAction("Tienda");
             }
 
-            
+            // Descontamos puntos y guardamos en sesión para que la barra de navegación se actualice
             usuarioActual.PuntosDisponibles -= objeto.CostoPuntos;
+            HttpContext.Session.SetInt32("PuntosUsuario", usuarioActual.PuntosDisponibles);
+
             objetosAdquiridos.Add(objeto.Id);
-            
-            GuardarUsuarioActual(usuarioActual);
             GuardarObjetosAdquiridos(objetosAdquiridos);
 
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
         }
 
-        private void CargarDatosPanelUsuario()
+        // --- SISTEMA DE LOGIN ---
+
+        [HttpGet]
+        [Route("Login")]
+        public IActionResult Login()
         {
-            var usuarioActual = ObtenerUsuarioActual();
-            ViewData["NombreUsuario"] = usuarioActual.Nombre;
-            ViewData["RolUsuario"] = usuarioActual.Rol;
-            ViewData["PuntosUsuario"] = usuarioActual.PuntosDisponibles.ToString("N0");
+            if (HttpContext.Session.GetString("NombreUsuario") != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
+            return View("~/Views/Home/Login.cshtml");
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Home/Login.cshtml", model);
+            }
+
+            var resultadoLogin = await _authService.AuthenticateAsync(model.Email, model.Password);
+
+            if (resultadoLogin != null && resultadoLogin.Success)
+            {
+                HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
+                HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
+                
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, resultadoLogin?.Message ?? "Correo o contraseña incorrectos.");
+            
+            return View("~/Views/Home/Login.cshtml", model);
+        }
+
+        // --- UTILERÍAS ---
 
         private TiendaViewModel ConstruirTiendaViewModel()
         {
@@ -199,67 +287,6 @@ namespace PinkPanther.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-        
-
-        
-        private readonly IAuthService _authService;
-        private readonly IUsuarioService _usuarioService;
-
-        public HomeController(IAuthService authService, IUsuarioService usuarioService)
-        {
-            _authService = authService;
-            _usuarioService = usuarioService;
-        }
-    
-
-        [HttpGet]
-        [Route("Login")]
-        public IActionResult Login()
-        {
-            if (HttpContext.Session.GetString("NombreUsuario") != null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
-            return View("~/Views/Home/Login.cshtml");
-        }
-
-        [HttpPost]
-        [Route("Login")]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("~/Views/Home/Login.cshtml", model);
-            }
-
-            var resultadoLogin = await _authService.AuthenticateAsync(model.Email, model.Password);
-
-            if (resultadoLogin != null && resultadoLogin.Success)
-            {
-                HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
-                HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
-                
-                return RedirectToAction("Index", "Home");
-            }
-
-            ModelState.AddModelError(string.Empty, resultadoLogin?.Message ?? "Correo o contraseña incorrectos.");
-            
-            return View("~/Views/Home/Login.cshtml", model);
-        }
-
-        public async Task<IActionResult> TablaClasificatoria()
-        {
-            try
-            {
-                var usuarios = await _usuarioService.ObtenerUsuarios();
-                return View(usuarios);
-            }
-            catch
-            {
-                return View(new List<Usuario>());
-            }
         }
     }
 }
