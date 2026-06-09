@@ -12,6 +12,28 @@ namespace PinkPanther.Services
             _httpClient = httpClient;
         }
 
+        public async Task<bool> GuardarResumen(int idUsuario, string resumenProfesional)
+        {
+            var url = "https://10.14.255.40:8002/api/perfil/" + idUsuario + "/resumen";
+
+            var datos = new
+            {
+                resumenProfesional = resumenProfesional
+            };
+
+            var json = JsonSerializer.Serialize(datos);
+
+            var content = new StringContent(
+                json,
+                System.Text.Encoding.UTF8,
+                "application/json"
+            );
+
+            var response = await _httpClient.PostAsync(url, content);
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<PerfilViewModel?> ObtenerPerfil(int idUsuario)
         {
             var url = "https://10.14.255.40:8002/api/perfil/" + idUsuario;
@@ -46,7 +68,7 @@ namespace PinkPanther.Services
             perfil.Departamento = perfilApi.departamento;
             perfil.Ubicacion = perfilApi.ubicacion;
 
-            perfil.ResumenProfesional = "Profesional con experiencia en la gestion de proyectos y coordinacion de equipos.";
+            perfil.ResumenProfesional = perfilApi.resumenProfesional;
 
             perfil.Logros = new List<Logro>();
 
@@ -86,38 +108,4 @@ namespace PinkPanther.Services
         }
     }
 
-   public class PerfilApiResponse
-    {
-        public int idUsuario { get; set; }
-        public string nombre { get; set; }
-        public string puesto { get; set; }
-        public string nivel { get; set; }
-        public string puntosDigitales { get; set; }
-        public string departamento { get; set; }
-        public string ubicacion { get; set; }
-        public string? fotoDePerfil { get; set; }
-
-        public List<LogroApi> logros { get; set; }
-        public List<ArticuloApi> articulosVirtuales { get; set; }
-    }
-
-    public class LogroApi
-    {
-        public int IDLogro { get; set; }
-        public string Nombre { get; set; }
-        public int Kilometros { get; set; }
-        public int Medallones { get; set; }
-        public int Nitro { get; set; }
-    }
-
-    public class ArticuloApi
-    {
-        public int id { get; set; }
-        public string tipo { get; set; }
-        public string nombre { get; set; }
-        public string descripcion { get; set; }
-        public int precio { get; set; }
-        public string rareza { get; set; }
-        public bool equipado { get; set; }
-    }
 }
