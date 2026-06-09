@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace PinkPanther.Models
 {
@@ -9,6 +10,8 @@ namespace PinkPanther.Models
         public string Puesto { get; set; }
         public string Nivel { get; set; }
         public int PuntosDigitales { get; set; }
+        public string? RutaFotoPerfil { get; set; }
+        public IFormFile? FotoPerfil { get; set; }
 
         public string Departamento { get; set; }
         public string Ubicacion { get; set; }
