@@ -14,7 +14,7 @@ public class UsuarioService : IUsuarioService
 
         public async Task<List<Usuario>> ObtenerUsuarios()
         {
-            var url = "https://127.0.0.1:8443/Usuario_Km";
+            var url = "https://10.14.255.40:8004/Usuario_Km";
 
             var response = await _httpClient.GetAsync(url);
 

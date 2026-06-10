@@ -205,6 +205,7 @@ namespace PinkPanther.Controllers
             {
                 HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
                 HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
+                HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
                 
                 return RedirectToAction("Index", "Home");
             }
