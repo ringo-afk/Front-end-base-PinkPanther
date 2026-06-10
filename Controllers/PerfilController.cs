@@ -9,7 +9,6 @@ using System.IO;
 
 namespace PinkPanther.Controllers;
 
-//Prueba
 
 [Route("Perfil")]
 public class PerfilController : Controller
@@ -62,7 +61,6 @@ public class PerfilController : Controller
         }
         else
         {
-            perfil.ResumenProfesional = resumenGuardado;
             perfil.RutaFotoPerfil = rutaFotoGuardada;
         }
 
@@ -72,12 +70,14 @@ public class PerfilController : Controller
     }
 
     [HttpPost("GuardarResumen")]
-    public IActionResult GuardarResumen(string ResumenProfesional)
+    public async Task<IActionResult> GuardarResumen(string ResumenProfesional)
     {
         if (HttpContext.Session.GetString("NombreUsuario") == null)
         {
             return RedirectToAction("Login", "Home");
         }
+
+        int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
 
         if (string.IsNullOrWhiteSpace(ResumenProfesional))
         {
@@ -89,8 +89,16 @@ public class PerfilController : Controller
         }
         else
         {
-            resumenGuardado = ResumenProfesional;
-            TempData["Mensaje"] = "Resumen profesional guardado correctamente.";
+            bool guardado = await _perfilService.GuardarResumen(idUsuario, ResumenProfesional);
+
+            if (guardado)
+            {
+                TempData["Mensaje"] = "Resumen profesional guardado correctamente.";
+            }
+            else
+            {
+                TempData["Error"] = "No se pudo guardar el resumen profesional.";
+            }
         }
 
         TempData["AbrirModal"] = "true";

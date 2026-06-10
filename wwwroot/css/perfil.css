@@ -345,3 +345,20 @@ body {
 
     box-shadow: 0px 8px 18px rgba(0,0,0,0.1);
 }
+
+.editar-foto-link {
+    color: #1c3d7c;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+.editar-foto-link:hover {
+    color: #0d47a1;
+}
+
+.input-foto-oculto {
+    display: none;
+}

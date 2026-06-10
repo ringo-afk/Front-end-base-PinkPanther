@@ -2,6 +2,20 @@
 
 <div class="container perfil-contenedor">
 
+    @if (TempData["MensajeFoto"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["MensajeFoto"]
+        </div>
+    }
+
+    @if (TempData["ErrorFoto"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @TempData["ErrorFoto"]
+        </div>
+    }
+
     <div class="perfil-card">
         <div class="row align-items-center">
 
@@ -16,6 +30,24 @@
                     {
                         <img id="fotoPerfil" src="~/Imagenes/user-icon.png" class="perfil-img" />
                     }
+
+                    <form asp-controller="Perfil"
+                          asp-action="GuardarFoto"
+                          method="post"
+                          enctype="multipart/form-data"
+                          id="formEditarFoto">
+
+                        <label for="inputFotoPerfil" class="editar-foto-link">
+                            Editar
+                        </label>
+
+                        <input id="inputFotoPerfil"
+                               type="file"
+                               asp-for="FotoPerfil"
+                               accept=".jpg,.jpeg,.png,.gif"
+                               class="input-foto-oculto"
+                               onchange="document.getElementById('formEditarFoto').submit();" />
+                    </form>
                 </div>
 
                 <div>
@@ -159,55 +191,34 @@
                     <div>@Model.Ubicacion</div>
                 </div>
 
-                <h3 class="modal-titulo mt-4">
-                    Foto de Perfil
-                </h3>
-
-                <form asp-controller="Perfil" asp-action="GuardarFoto" method="post" enctype="multipart/form-data">
-                    <input type="file" asp-for="FotoPerfil" class="form-control" />
-
-                    <div class="text-end mt-3">
-                        <button type="submit" class="btn btn-canjear">
-                            Guardar foto
-                        </button>
-                    </div>
-                </form>
-
-                @if (TempData["MensajeFoto"] != null)
-                {
-                    <div class="alert alert-success text-center mt-3">
-                        @TempData["MensajeFoto"]
-                    </div>
-                }
-
-                @if (TempData["ErrorFoto"] != null)
-                {
-                    <div class="alert alert-danger text-center mt-3">
-                        @TempData["ErrorFoto"]
-                    </div>
-                }
-
                 <form asp-controller="Perfil" asp-action="GuardarResumen" method="post">
-                @if (TempData["Mensaje"] != null)
-                {
-                    <div class="alert alert-success text-center mt-3">
-                        @TempData["Mensaje"]
-                    </div>
-                }
 
-                @if (TempData["Error"] != null)
-                {
-                    <div class="alert alert-danger text-center mt-3">
-                        @TempData["Error"]
-                    </div>
-                }
+                    @if (TempData["Mensaje"] != null)
+                    {
+                        <div class="alert alert-success text-center mt-3">
+                            @TempData["Mensaje"]
+                        </div>
+                    }
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger text-center mt-3">
+                            @TempData["Error"]
+                        </div>
+                    }
 
                     <h3 class="modal-titulo mt-4">
                         Resumen Profesional
                     </h3>
 
-                    <textarea asp-for="ResumenProfesional" class="form-control textarea-resumen" rows="4" maxlength="400"></textarea>
-                        <small class="text-muted"> Máximo 400 caracteres </small>
+                    <textarea asp-for="ResumenProfesional"
+                              class="form-control textarea-resumen"
+                              rows="4"
+                              maxlength="400"></textarea>
+
+                    <small class="text-muted">
+                        Máximo 400 caracteres
+                    </small>
 
                     <span asp-validation-for="ResumenProfesional"
                           class="text-danger">
@@ -227,9 +238,13 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal"> Cancelar </button>
-                        
-                        <button type="submit" class="btn btn-canjear"> Guardar cambios </button>
+                        <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="btn btn-canjear">
+                            Guardar cambios
+                        </button>
                     </div>
 
                 </form>
@@ -257,16 +272,14 @@
                 <div class="mt-4">
 
                     <a asp-controller="Home"
-                        asp-action="Tienda"
-                        class="btn btn-canjear">
+                       asp-action="Tienda"
+                       class="btn btn-canjear">
                         Sí
                     </a>
 
                     <button class="btn btn-cancelar"
                             data-bs-dismiss="modal">
-
                         No
-
                     </button>
 
                 </div>
