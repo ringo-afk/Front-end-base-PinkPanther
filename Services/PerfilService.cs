@@ -34,6 +34,29 @@ namespace PinkPanther.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> EquiparAccesorio(int idUsuario, int idAccesorio)
+        {
+            var url = "https://10.14.255.40:8001/api/accesorios/toggle-equipar";
+
+            var datos = new
+            {
+                IdUsuario = idUsuario,
+                IdAccesorio = idAccesorio
+            };
+
+            var json = JsonSerializer.Serialize(datos);
+
+            var content = new StringContent(
+                json,
+                System.Text.Encoding.UTF8,
+                "application/json"
+            );
+
+            var response = await _httpClient.PostAsync(url, content);
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<PerfilViewModel?> ObtenerPerfil(int idUsuario)
         {
             var url = "https://10.14.255.40:8002/api/perfil/" + idUsuario;
@@ -64,10 +87,13 @@ namespace PinkPanther.Services
             perfil.Nombre = perfilApi.nombre;
             perfil.Puesto = perfilApi.puesto;
             perfil.Nivel = perfilApi.nivel;
-            perfil.PuntosDigitales = int.Parse(perfilApi.puntosDigitales);
+
+            int puntos = 0;
+            int.TryParse(perfilApi.puntosDigitales, out puntos);
+            perfil.PuntosDigitales = puntos;
+
             perfil.Departamento = perfilApi.departamento;
             perfil.Ubicacion = perfilApi.ubicacion;
-
             perfil.ResumenProfesional = perfilApi.resumenProfesional;
 
             perfil.Logros = new List<Logro>();
@@ -89,10 +115,13 @@ namespace PinkPanther.Services
             {
                 ArticuloVirtual articulo = new ArticuloVirtual();
 
+                articulo.Id = articuloApi.id;
+                articulo.Tipo = articuloApi.tipo;
                 articulo.Icono = "gift";
                 articulo.Nombre = articuloApi.nombre;
                 articulo.Rareza = articuloApi.rareza;
                 articulo.EsUltraRaro = articuloApi.rareza == "Ultra Raro";
+                articulo.Equipado = articuloApi.equipado;
 
                 perfil.ArticulosVirtuales.Add(articulo);
             }
@@ -107,5 +136,4 @@ namespace PinkPanther.Services
             return perfil;
         }
     }
-
 }

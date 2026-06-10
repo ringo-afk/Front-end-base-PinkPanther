@@ -362,3 +362,18 @@ body {
 .input-foto-oculto {
     display: none;
 }
+
+.estado-equipado {
+    background-color: #ffc107;
+    color: #0b2c5f;
+    font-weight: bold;
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.btn-equipar {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+}

@@ -9,7 +9,6 @@ using System.IO;
 
 namespace PinkPanther.Controllers;
 
-
 [Route("Perfil")]
 public class PerfilController : Controller
 {
@@ -151,6 +150,36 @@ public class PerfilController : Controller
         }
 
         TempData["AbrirModal"] = "true";
+
+        return RedirectToAction("Perfil");
+    }
+
+    [HttpPost("EquiparArticulo")]
+    public async Task<IActionResult> EquiparArticulo(int idArticulo, string tipoArticulo)
+    {
+        if (HttpContext.Session.GetString("NombreUsuario") == null)
+        {
+            return RedirectToAction("Login", "Home");
+        }
+
+        int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
+
+        if (tipoArticulo != "Accesorio")
+        {
+            TempData["MensajeEquipar"] = "Por ahora solo se pueden equipar accesorios.";
+            return RedirectToAction("Perfil");
+        }
+
+        bool equipado = await _perfilService.EquiparAccesorio(idUsuario, idArticulo);
+
+        if (equipado)
+        {
+            TempData["MensajeEquipar"] = "Accesorio equipado correctamente.";
+        }
+        else
+        {
+            TempData["MensajeEquipar"] = "No se pudo equipar el accesorio.";
+        }
 
         return RedirectToAction("Perfil");
     }

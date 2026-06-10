@@ -16,6 +16,13 @@
         </div>
     }
 
+    @if (TempData["MensajeEquipar"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["MensajeEquipar"]
+        </div>
+    }
+
     <div class="perfil-card">
         <div class="row align-items-center">
 
@@ -130,6 +137,28 @@
                             <div class="rareza @(articulo.EsUltraRaro ? "ultra-raro" : "raro")">
                                 @articulo.Rareza
                             </div>
+
+                            @if (articulo.Equipado)
+                            {
+                                <div class="estado-equipado mt-2">
+                                    Equipado
+                                </div>
+                            }
+                            else
+                            {
+                                <form asp-controller="Perfil"
+                                      asp-action="EquiparArticulo"
+                                      method="post"
+                                      class="mt-2">
+
+                                    <input type="hidden" name="idArticulo" value="@articulo.Id" />
+                                    <input type="hidden" name="tipoArticulo" value="@articulo.Tipo" />
+
+                                    <button type="submit" class="btn btn-canjear btn-equipar">
+                                        Equipar
+                                    </button>
+                                </form>
+                            }
                         </div>
                     </div>
                 }
