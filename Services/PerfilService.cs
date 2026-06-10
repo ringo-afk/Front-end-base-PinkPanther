@@ -34,18 +34,17 @@ namespace PinkPanther.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> EquiparAccesorio(int idUsuario, int idAccesorio)
+        public async Task<bool?> EquiparAccesorio(int idUsuario, int idAccesorio)
         {
-            var url = "https://10.14.255.40:8001/api/accesorios/toggle-equipar";
+            var url = "https://10.14.255.40:8000/api/accesorios/toggle-equipar";
 
             var datos = new
             {
-                IdUsuario = idUsuario,
-                IdAccesorio = idAccesorio
+                usuario_id = idUsuario,
+                accesorio_id = idAccesorio
             };
 
             var json = JsonSerializer.Serialize(datos);
-
             var content = new StringContent(
                 json,
                 System.Text.Encoding.UTF8,
@@ -53,8 +52,17 @@ namespace PinkPanther.Services
             );
 
             var response = await _httpClient.PostAsync(url, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
 
-            return response.IsSuccessStatusCode;
+            var jsonResult = await response.Content.ReadAsStringAsync();
+            
+            using (var doc = JsonDocument.Parse(jsonResult))
+            {
+                return doc.RootElement.GetProperty("equipado").GetBoolean();
+            }
         }
 
         public async Task<PerfilViewModel?> ObtenerPerfil(int idUsuario)

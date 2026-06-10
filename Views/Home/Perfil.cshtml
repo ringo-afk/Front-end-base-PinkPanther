@@ -138,27 +138,27 @@
                                 @articulo.Rareza
                             </div>
 
-                            @if (articulo.Equipado)
-                            {
-                                <div class="estado-equipado mt-2">
-                                    Equipado
-                                </div>
-                            }
-                            else
-                            {
-                                <form asp-controller="Perfil"
-                                      asp-action="EquiparArticulo"
-                                      method="post"
-                                      class="mt-2">
+                            <form asp-controller="Perfil"
+                                  asp-action="EquiparArticulo"
+                                  method="post"
+                                  class="mt-2">
 
-                                    <input type="hidden" name="idArticulo" value="@articulo.Id" />
-                                    <input type="hidden" name="tipoArticulo" value="@articulo.Tipo" />
+                                <input type="hidden" name="idArticulo" value="@articulo.Id" />
+                                <input type="hidden" name="tipoArticulo" value="@articulo.Tipo" />
 
-                                    <button type="submit" class="btn btn-canjear btn-equipar">
+                                @if (articulo.Equipado)
+                                {
+                                    <button type="submit" class="btn btn-cancelar btn-equipar" style="width: 100%;">
+                                        Desequipar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-canjear btn-equipar" style="width: 100%;">
                                         Equipar
                                     </button>
-                                </form>
-                            }
+                                }
+                            </form>
                         </div>
                     </div>
                 }

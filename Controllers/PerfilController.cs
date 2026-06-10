@@ -6,6 +6,8 @@ using PinkPanther.Services;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace PinkPanther.Controllers;
 
@@ -169,16 +171,20 @@ public class PerfilController : Controller
             TempData["MensajeEquipar"] = "Por ahora solo se pueden equipar accesorios.";
             return RedirectToAction("Perfil");
         }
+        
+        bool? estadoEquipado = await _perfilService.EquiparAccesorio(idUsuario, idArticulo);
 
-        bool equipado = await _perfilService.EquiparAccesorio(idUsuario, idArticulo);
-
-        if (equipado)
+        if (estadoEquipado == true)
         {
             TempData["MensajeEquipar"] = "Accesorio equipado correctamente.";
         }
+        else if (estadoEquipado == false)
+        {
+            TempData["MensajeEquipar"] = "Accesorio desequipado correctamente.";
+        }
         else
         {
-            TempData["MensajeEquipar"] = "No se pudo equipar el accesorio.";
+            TempData["MensajeEquipar"] = "No se pudo actualizar el estado del accesorio.";
         }
 
         return RedirectToAction("Perfil");
