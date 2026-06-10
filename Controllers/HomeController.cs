@@ -114,6 +114,15 @@ namespace PinkPanther.Controllers
             return View(model);
         }
 
+        public IActionResult Juego()
+        {
+            if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
+
+            CargarDatosPanelUsuario();
+            
+            return View("~/Views/Home/Juego.cshtml");
+        }
+
         public IActionResult Tienda()
         {
             if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");

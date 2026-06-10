@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Simulador Challenge";
+    int idUsuarioLogueado = Context.Session.GetInt32("IdUsuario") ?? 0;
+    string buildFolder = "CyberRace"; 
+}
+
+<div class="container text-center mt-4">
+    <div class="juego-header mb-4">
+        <h1 class="display-5 fw-bold text-dark">Minijuegos para aprender acerca de la IA</h1>
+    </div>
+
+    <div id="unity-container" class="unity-desktop shadow-lg unity-contenedor-principal">
+        
+        <canvas id="unity-canvas" class="unity-lienzo"></canvas>
+        
+        <div id="unity-loading-bar" class="unity-pantalla-carga">
+            <div class="text-white mb-2">Cargando simulador de Unity...</div>
+            <div id="unity-progress-bar-empty" class="unity-barra-vacia">
+                <div id="unity-progress-bar-full" class="unity-barra-llena"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Catalogo" class="btn btn-outline-secondary px-4">
+            <i class="bi bi-arrow-left"></i> Volver al Catálogo
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/UnityBuilds/@buildFolder/Build/@(buildFolder).loader.js"></script>
+    <script src="~/js/unity-bridge.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            IniciarJuegoUnity(
+                "#unity-canvas",
+                "#unity-loading-bar",
+                "#unity-progress-bar-full",
+                "@buildFolder",
+                "Whirlpool Challenge",
+                @idUsuarioLogueado
+            );
+        });
+    </script>
+}

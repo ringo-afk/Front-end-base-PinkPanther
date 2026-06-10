@@ -25,11 +25,13 @@
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
         var clsLeaderboard = "nav-link text-dark";
+        var clsJuego = "nav-link text-dark"; // <-- Variable para el nuevo botón
 
         if (currentController == "Home" && currentAction == "Catalogo") { clsCatalogo += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
         if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "TablaClasificatoria") { clsLeaderboard += " nav-link-activo"; }
+        if (currentController == "Juego" && currentAction == "Juego") { clsJuego += " nav-link-activo"; } // <-- Lógica de activo
 
         var puntos = Context.Session.GetInt32("PuntosUsuario")?.ToString("N0") ?? "0";
         var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? "Usuario";
@@ -52,6 +54,11 @@
                 {
                     <div class="menu-superior">
                         <ul class="navbar-nav menu-centrado" style="gap: 20px;">
+                            <li class="nav-item">
+                                <a class="@clsJuego" asp-area="" asp-controller="Home" asp-action="Juego">
+                                    <i class="bi bi-controller me-1"></i> Jugar
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="@clsCatalogo" asp-area="" asp-controller="Home" asp-action="Catalogo">
                                     <i class="bi bi-book me-1"></i> Catálogo

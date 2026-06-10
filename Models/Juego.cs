@@ -15,4 +15,8 @@ public class Juego
     public string Dificultad { get; set; } = string.Empty;
 
     public string Duracion { get; set; } = string.Empty;
-}
+
+    public string BuildFolder { get; set; } = string.Empty;
+    
+    public int IdUsuario{ get; set; }
+    }
