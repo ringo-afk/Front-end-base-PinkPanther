@@ -165,26 +165,24 @@ public class PerfilController : Controller
         }
 
         int idUsuario = HttpContext.Session.GetInt32("IdUsuario") ?? 1;
-
-        if (tipoArticulo != "Accesorio")
-        {
-            TempData["MensajeEquipar"] = "Por ahora solo se pueden equipar accesorios.";
-            return RedirectToAction("Perfil");
-        }
         
-        bool? estadoEquipado = await _perfilService.EquiparAccesorio(idUsuario, idArticulo);
+        Console.WriteLine("Articulo: " + idArticulo + " | Tipo: " + tipoArticulo + " | usuario: " + idUsuario);
+
+        bool? estadoEquipado = await _perfilService.EquiparArticulo(idUsuario, idArticulo, tipoArticulo);
+
+        string letra = (tipoArticulo == "Mejora") ? "a" : "o";
 
         if (estadoEquipado == true)
         {
-            TempData["MensajeEquipar"] = "Accesorio equipado correctamente.";
+            TempData["MensajeEquipar"] = $"{tipoArticulo} equipad{letra} correctamente.";
         }
         else if (estadoEquipado == false)
         {
-            TempData["MensajeEquipar"] = "Accesorio desequipado correctamente.";
+            TempData["MensajeEquipar"] = $"{tipoArticulo} desequipad{letra} correctamente.";
         }
         else
         {
-            TempData["MensajeEquipar"] = "No se pudo actualizar el estado del accesorio.";
+            TempData["MensajeEquipar"] = "No se pudo actualizar el estado del artículo.";
         }
 
         return RedirectToAction("Perfil");

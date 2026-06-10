@@ -25,13 +25,13 @@
         var clsTienda = "nav-link text-dark";
         var clsPrivacy = "nav-link text-dark";
         var clsLeaderboard = "nav-link text-dark";
-        var clsJuego = "nav-link text-dark"; // <-- Variable para el nuevo botón
+        var clsJuego = "nav-link text-dark"; 
 
         if (currentController == "Home" && currentAction == "Catalogo") { clsCatalogo += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "Tienda") { clsTienda += " nav-link-activo"; }
         if (currentController == "Perfil" && currentAction == "Perfil") { clsPrivacy += " nav-link-activo"; }
         if (currentController == "Home" && currentAction == "TablaClasificatoria") { clsLeaderboard += " nav-link-activo"; }
-        if (currentController == "Juego" && currentAction == "Juego") { clsJuego += " nav-link-activo"; } // <-- Lógica de activo
+        if (currentController == "Juego" && currentAction == "Juego") { clsJuego += " nav-link-activo"; }
 
         var puntos = Context.Session.GetInt32("PuntosUsuario")?.ToString("N0") ?? "0";
         var nombreUsuario = Context.Session.GetString("NombreUsuario") ?? "Usuario";

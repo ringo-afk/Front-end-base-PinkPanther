@@ -34,14 +34,15 @@ namespace PinkPanther.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool?> EquiparAccesorio(int idUsuario, int idAccesorio)
+        public async Task<bool?> EquiparArticulo(int idUsuario, int idArticulo, string tipoArticulo)
         {
-            var url = "https://10.14.255.40:8000/api/accesorios/toggle-equipar";
+            var url = "https://10.14.255.40:8000/api/articulos/toggle-equipar";
 
             var datos = new
             {
                 usuario_id = idUsuario,
-                accesorio_id = idAccesorio
+                articulo_id = idArticulo,
+                tipo_articulo = tipoArticulo
             };
 
             var json = JsonSerializer.Serialize(datos);
@@ -52,6 +53,7 @@ namespace PinkPanther.Services
             );
 
             var response = await _httpClient.PostAsync(url, content);
+            
             if (!response.IsSuccessStatusCode)
             {
                 return null;
