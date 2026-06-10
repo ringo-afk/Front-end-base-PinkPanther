@@ -3,6 +3,17 @@ using PinkPanther.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient<ITiendaService, TiendaService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
+
 builder.Services.AddHttpClient<IPerfilService, PerfilService>()
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {

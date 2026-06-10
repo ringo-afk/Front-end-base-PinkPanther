@@ -3,9 +3,9 @@ html {
 }
 
 :root {
-  --color-azul-marca: #002F6C;          /* Azul Whirlpool Principal */
-  --color-azul-secundario: #0047AB;     /* Azul secundario */
-  --color-amarillo-marca: #FFC72C;      /* Amarillo Whirlpool acento */
+  --color-azul-marca: #002F6C;
+  --color-azul-secundario: #0047AB;
+  --color-amarillo-marca: #FFC72C;
   --color-azul-oscuro: #001F4D;
   --color-azul-claro: #4A90E2;
   --color-azul-muy-claro: #D6E4F5;
@@ -54,29 +54,24 @@ body {
   .navbar .container-fluid {
     position: relative;
   }
-  /*Aplica las reglas solo cuando la pantalla mide 576px o mas*/
- /*convierte ese contenedor en referencia de posicionamiento*/
   .menu-centrado {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%); /*Centra el menu*/
+    transform: translateX(-50%);
     display: flex;
     gap: 0.5rem;
   }
 }
 
-/* Hice esta clase para quitar el margen inferior del encabezado y la ubiqué en la barra principal del layout. */
 .barra-principal {
   margin-bottom: 0;
 }
 
-/* Hice esta regla para que el logo no se deforme y la ubiqué directamente sobre la imagen del encabezado. */
 .navbar-brand img {
   max-width: 100%;
   height: auto;
 }
 
-/* Hice esta regla para dar estilo al menu y la ubiqué en los enlaces de navegacion del layout. */
 .navbar-nav .nav-link {
   font-weight: 700;
   color: var(--color-azul-marca) !important;
@@ -88,7 +83,6 @@ body {
   text-underline-offset: 5px;
 }
 
-/* Hice esta clase para acomodar el bloque del perfil a la derecha y la ubiqué en el encabezado del layout. */
 .panel-perfil {
   display: flex;
   align-items: center;
@@ -96,7 +90,6 @@ body {
   margin-left: auto;
 }
 
-/* Hice esta clase para mostrar los puntos en forma de pastilla y la ubiqué en el panel del perfil. */
 .pildora-puntos {
   background-color: var(--color-azul-marca);
   color: #fff;
@@ -110,7 +103,6 @@ body {
   justify-content: center;
 }
 
-/* Hice esta clase para dibujar el circulito de moneda y la ubiqué dentro de la pastilla de puntos. */
 .punto-moneda {
   width: 14px;
   height: 14px;
@@ -119,7 +111,6 @@ body {
   display: inline-block;
 }
 
-/* Hice esta clase para acomodar el nombre del jugador y la ubiqué junto al avatar del perfil. */
 .nombre-perfil {
   display: flex;
   flex-direction: column;
@@ -127,13 +118,11 @@ body {
   color: var(--color-azul-marca);
 }
 
-/* Hice esta regla para diferenciar el subtitulo del perfil y la ubiqué en el texto secundario del nombre. */
 .nombre-perfil span {
   font-size: 0.8rem;
   font-weight: 700;
 }
 
-/* Hice esta clase para marcar el espacio del avatar y la ubiqué al final del panel de perfil. */
 .avatar-perfil {
   width: 48px;
   height: 48px;
@@ -146,12 +135,10 @@ body {
   font-weight: 700;
 }
 
-/* Hice esta clase para separar el contenido principal de la tienda y la ubiqué en la vista Tienda. */
 .pagina-tienda {
   padding: 1.2rem 0 2rem;
 }
 
-/* Hice esta clase para resaltar el titulo y la ubiqué en el encabezado de la tienda. */
 .encabezado-tienda h1 {
   color: var(--color-azul-marca);
   font-size: 2.15rem;
@@ -159,20 +146,17 @@ body {
   font-weight: 800;
 }
 
-/* Hice esta clase para el texto descriptivo y la ubiqué debajo del titulo de la tienda. */
 .encabezado-tienda p {
   color: var(--color-gris-oscuro);
   margin-bottom: 1.8rem;
 }
 
-/* Hice esta clase para ordenar las tarjetas en columnas y la ubiqué en el contenedor de productos. */
 .rejilla-tienda {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.7rem;
 }
 
-/* Hice esta clase para dar forma a cada tarjeta y la ubiqué en cada producto de la tienda. */
 .tarjeta-tienda {
   background-color: var(--color-blanco);
   border-radius: 14px;
@@ -181,7 +165,6 @@ body {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
 }
 
-/* Hice esta clase para dejar el espacio de la imagen y la ubiqué en la parte superior de cada tarjeta. */
 .espacio-imagen {
   width: 92px;
   height: 92px;
@@ -205,14 +188,12 @@ body {
   display: block;
 }
 
-/* Hice esta regla para acomodar el nombre del producto y la ubiqué dentro de la tarjeta de tienda. */
 .tarjeta-tienda h2 {
   font-size: 1.13rem;
   margin-bottom: 0.2rem;
   min-height: 2.6rem;
 }
 
-/* Hice esta clase para destacar el costo en puntos y la ubiqué debajo del nombre del producto. */
 .puntos-articulo {
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
@@ -222,7 +203,6 @@ body {
   margin: 0;
 }
 
-/* Hice esta clase para unificar los botones y la ubiqué al final de cada tarjeta. */
 .boton-tienda {
   width: 100%;
   border: 0;
@@ -242,24 +222,20 @@ body {
   margin: 0 auto 1rem;
 }
 
-/* Hice esta clase para el boton de compra y la ubiqué en los articulos disponibles. */
 .boton-comprar {
   background-color: var(--color-amarillo-marca);
 }
 
-/* Hice esta clase para marcar un articulo ya adquirido y la ubiqué en tarjetas de estado especial. */
 .boton-adquirido,
 .boton-equipado {
   background-color: var(--color-azul-marca);
   color: #fff;
 }
 
-/* Hice esta clase para desactivar visualmente un articulo sin puntos y la ubiqué en el boton bloqueado. */
 .boton-bloqueado {
   background-color: var(--color-gris-medio);
 }
 
-/* Hice esta clase para ocultar la confirmación y la ubiqué debajo de la tienda en la vista Tienda. */
 .confirmacion-overlay {
   position: fixed;
   inset: 0;
@@ -271,12 +247,10 @@ body {
   z-index: 1050;
 }
 
-/* Hice esta regla para mostrar el cuadro cuando se hace clic en el enlace y la ubiqué sobre cada confirmación. */
 .confirmacion-overlay:target {
   display: flex;
 }
 
-/* Hice esta clase para dibujar la ventana blanca de compra y la ubiqué al centro del overlay. */
 .ventana-confirmacion {
   background-color: #ffffff;
   width: min(100%, 460px);
@@ -286,20 +260,17 @@ body {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
 }
 
-/* Hice esta clase para resaltar el titulo del cuadro y la ubiqué en la parte superior de la ventana. */
 .ventana-confirmacion h3 {
   color: var(--color-azul-marca);
   font-size: 2rem;
   margin-bottom: 0.35rem;
 }
 
-/* Hice esta clase para explicar la compra y la ubiqué debajo del titulo del modal. */
 .texto-confirmacion {
   margin-bottom: 1rem;
   font-size: 1rem;
 }
 
-/* Hice esta clase para mostrar la imagen del articulo y la ubiqué al centro del modal. */
 .imagen-confirmacion {
   width: 160px;
   height: 160px;
@@ -314,7 +285,6 @@ body {
   color: var(--color-gris-oscuro);
 }
 
-/* Hice esta clase para acomodar los botones del modal y la ubiqué en la parte baja de la ventana. */
 .acciones-confirmacion {
   display: flex;
   justify-content: center;
@@ -326,7 +296,6 @@ body {
   margin: 0;
 }
 
-/* Hice esta clase para unificar los botones del modal y la ubiqué en las acciones de confirmar compra. */
 .boton-confirmacion {
   min-width: 130px;
   border: 0;
@@ -338,13 +307,11 @@ body {
   text-align: center;
 }
 
-/* Hice esta clase para el boton de cancelar y la ubiqué en las acciones del modal. */
 .boton-cancelar {
   background-color: var(--color-gris-claro);
   color: var(--color-gris-carbon);
 }
 
-/* Hice esta clase para el boton de aceptar y la ubiqué en las acciones del modal. */
 .boton-aceptar {
   background-color: var(--color-amarillo-marca);
   color: var(--color-gris-carbon);

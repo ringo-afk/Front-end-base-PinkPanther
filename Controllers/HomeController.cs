@@ -9,29 +9,20 @@ namespace PinkPanther.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly List<ObjetoTienda> CatalogoBase = new List<ObjetoTienda>
-        {
-            new ObjetoTienda { Id = 1, Nombre = "Chamarra Élite", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Chamarra Elite.png" },
-            new ObjetoTienda { Id = 2, Nombre = "Lentes VR de Neón", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Lentes VR.png" },
-            new ObjetoTienda { Id = 3, Nombre = "Rines Carro", Categoria = "Accesorio Auto", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Rines-carro.png" },
-            new ObjetoTienda { Id = 4, Nombre = "Carro Moderno", Categoria = "Auto", CostoPuntos = 2500, RutaImagen = "~/Imagenes/Carro-moderno.png" },
-            new ObjetoTienda { Id = 5, Nombre = "Gorra Negra", Categoria = "Avatar", CostoPuntos = 1500, RutaImagen = "~/Imagenes/Gorra-negra.png" },
-            new ObjetoTienda { Id = 6, Nombre = "Casco Ingeniero", Categoria = "Avatar", CostoPuntos = 2500, RutaImagen = "~/Imagenes/Casco-Ingeniero.png" },
-            new ObjetoTienda { Id = 7, Nombre = "Objeto Aleatorio", Categoria = "Global", CostoPuntos = 1000, RutaImagen = "~/Imagenes/Random.png" },
-            new ObjetoTienda { Id = 8, Nombre = "Carro Deportivo", Categoria = "Auto", CostoPuntos = 6000, RutaImagen = "~/Imagenes/Carro-deportivo.png" }
-        };
-
         private static int? ObjetoEquipadoId = 6; 
 
         private readonly IAuthService _authService;
         private readonly IUsuarioService _usuarioService;
         private readonly ICatalogoService _catalogoService;
+        private readonly ITiendaService _tiendaService;
 
-        public HomeController(IAuthService authService, IUsuarioService usuarioService, ICatalogoService catalogoService)
+        
+        public HomeController(IAuthService authService, IUsuarioService usuarioService, ICatalogoService catalogoService, ITiendaService tiendaService)
         {
             _authService = authService;
             _usuarioService = usuarioService;
             _catalogoService = catalogoService;
+            _tiendaService = tiendaService;
         }
 
         private UsuarioJuego ObtenerUsuarioActual()
@@ -114,12 +105,13 @@ namespace PinkPanther.Controllers
             return View(model);
         }
 
-        public IActionResult Tienda()
+        
+        public async Task<IActionResult> Tienda()
         {
             if (ObtenerUsuarioActual() == null) return RedirectToAction("Login", "Home");
 
             CargarDatosPanelUsuario();
-            var model = ConstruirTiendaViewModel();
+            var model = await ConstruirTiendaViewModelAsync();
             return View(model);
         }
 
@@ -138,14 +130,17 @@ namespace PinkPanther.Controllers
             }
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Comprar(int objetoId)
+        public async Task<IActionResult> Comprar(int objetoId)
         {
             var usuarioActual = ObtenerUsuarioActual();
             if (usuarioActual == null) return RedirectToAction("Login", "Home");
 
-            ObjetoTienda? objeto = CatalogoBase.Find(item => item.Id == objetoId);
+            
+            var catalogoDb = await _tiendaService.ObtenerCatalogo();
+            ObjetoTienda? objeto = catalogoDb.Find(item => item.Id == objetoId);
 
             if (objeto == null)
             {
@@ -176,7 +171,6 @@ namespace PinkPanther.Controllers
             TempData["CompraExitosa"] = "Compra realizada: " + objeto.Nombre + " por " + objeto.CostoPuntos.ToString("N0") + " puntos.";
             return RedirectToAction(nameof(Tienda));
         }
-
 
         [HttpGet]
         [Route("Login")]
@@ -214,13 +208,17 @@ namespace PinkPanther.Controllers
             return View("~/Views/Home/Login.cshtml", model);
         }
 
-        private TiendaViewModel ConstruirTiendaViewModel()
+        
+        private async Task<TiendaViewModel> ConstruirTiendaViewModelAsync()
         {
             var objetos = new List<ObjetoTienda>();
             var objetosAdquiridos = ObtenerObjetosAdquiridos();
             var usuarioActual = ObtenerUsuarioActual();
 
-            foreach (var item in CatalogoBase)
+            
+            var catalogoDb = await _tiendaService.ObtenerCatalogo();
+
+            foreach (var item in catalogoDb)
             {
                 var estado = EstadoObjetoTienda.Disponible;
 
@@ -232,29 +230,21 @@ namespace PinkPanther.Controllers
                 {
                     estado = EstadoObjetoTienda.Adquirido;
                 }
-                else if (item.CostoPuntos > usuarioActual.PuntosDisponibles)
+                else if (usuarioActual != null && item.CostoPuntos > usuarioActual.PuntosDisponibles)
                 {
                     estado = EstadoObjetoTienda.Bloqueado;
                 }
 
-                var obj = new ObjetoTienda
-                {
-                    Id = item.Id,
-                    Nombre = item.Nombre,
-                    Categoria = item.Categoria,
-                    CostoPuntos = item.CostoPuntos,
-                    RutaImagen = item.RutaImagen,
-                    TextoConfirmacion = ObtenerTextoConfirmacion(item.Nombre),
-                    Estado = estado,
-                    EsComprable = (estado == EstadoObjetoTienda.Disponible)
-                };
+                item.Estado = estado;
+                item.EsComprable = (estado == EstadoObjetoTienda.Disponible);
+                item.TextoConfirmacion = ObtenerTextoConfirmacion(item.Nombre);
 
-                objetos.Add(obj);
+                objetos.Add(item);
             }
 
             var model = new TiendaViewModel
             {
-                Usuario = usuarioActual, 
+                Usuario = usuarioActual ?? new UsuarioJuego(), 
                 Objetos = objetos
             };
 
