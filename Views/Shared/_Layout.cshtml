@@ -74,16 +74,40 @@
                             </li>
                         </ul>
 
-                        <div class="panel-perfil">
-                            <div class="pildora-puntos">
+                        <div class="panel-perfil d-flex align-items-center">
+                            <div class="pildora-puntos me-3">
                                 <span class="punto-moneda"></span>
                                 @puntos
                             </div>
-                            <div class="nombre-perfil">
+                            <div class="nombre-perfil me-3 text-end">
                                 <strong>@nombreUsuario</strong>
                                 <span>@rolUsuario</span>
                             </div>
-                            <div class="avatar-perfil">@nombreUsuario.Substring(0,1)</div>
+                            
+                            <div class="dropdown">
+                                <div class="avatar-perfil" 
+                                     data-bs-toggle="dropdown" 
+                                     aria-expanded="false" 
+                                     style="cursor: pointer; transition: 0.2s;"
+                                     onmouseover="this.style.opacity='0.8'"
+                                     onmouseout="this.style.opacity='1'">
+                                    @nombreUsuario.Substring(0,1)
+                                </div>
+                                
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="border-radius: 10px;">
+                                    <li>
+                                        <a class="dropdown-item py-2" asp-controller="Perfil" asp-action="Perfil">
+                                            <i class="bi bi-person me-2"></i> Ir al Perfil
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item py-2 text-danger" asp-controller="Home" asp-action="Logout">
+                                            <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 }

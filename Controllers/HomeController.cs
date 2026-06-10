@@ -177,7 +177,6 @@ namespace PinkPanther.Controllers
             return RedirectToAction(nameof(Tienda));
         }
 
-
         [HttpGet]
         [Route("Login")]
         public IActionResult Login()
@@ -206,7 +205,6 @@ namespace PinkPanther.Controllers
                 HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
                 HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
                 HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
-                HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
                 
                 return RedirectToAction("Index", "Home");
             }
@@ -214,6 +212,13 @@ namespace PinkPanther.Controllers
             ModelState.AddModelError(string.Empty, resultadoLogin?.Message ?? "Correo o contraseña incorrectos.");
             
             return View("~/Views/Home/Login.cshtml", model);
+        }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Home");
         }
 
         private TiendaViewModel ConstruirTiendaViewModel()
