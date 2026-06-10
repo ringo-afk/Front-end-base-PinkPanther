@@ -215,7 +215,7 @@ namespace PinkPanther.Controllers
                 HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
                 HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
                 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Catalogo", "Home");
             }
 
             ModelState.AddModelError(string.Empty, resultadoLogin?.Message ?? "Correo o contraseña incorrectos.");
