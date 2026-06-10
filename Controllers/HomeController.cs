@@ -203,6 +203,7 @@ namespace PinkPanther.Controllers
 
             if (resultadoLogin != null && resultadoLogin.Success)
             {
+                HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
                 HttpContext.Session.SetString("NombreUsuario", resultadoLogin.Nombre);
                 HttpContext.Session.SetInt32("PuntosUsuario", resultadoLogin.Kilometros);
                 HttpContext.Session.SetInt32("IdUsuario", resultadoLogin.IdUsuario);
