@@ -16,7 +16,7 @@ public class CatalogoService : ICatalogoService
         try
         {
             var client = _httpClientFactory.CreateClient("CatalogoApi");
-            var url = "https://127.0.0.1:8001/juegos";
+            var url = "https://10.14.255.40:8010/juegos";
 
             var response = await client.GetAsync(url);
 
@@ -39,7 +39,7 @@ public class CatalogoService : ICatalogoService
         try
         {
             var client = _httpClientFactory.CreateClient("CatalogoApi");
-            var url = $"https://127.0.0.1:8001/juegos/dificultad/{dificultad}";
+            var url = $"https://10.14.255.40:8010/juegos/dificultad/{dificultad}";
             var response = await client.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
